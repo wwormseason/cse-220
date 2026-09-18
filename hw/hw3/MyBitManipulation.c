@@ -1,21 +1,17 @@
 #include "MyBitManipulation.h"
 
-
 /*
  * Toggle the bit at position pos.
  *
  * Example:
  * ToggleBit(0,3) -> 8
- *
  * Return original number if pos is invalid.
  */
 int ToggleBit(int num, int pos)
 {
-    // TODO: implement
-
-    return 0;
+    num |= 1 << pos;
+    return num;
 }
-
 
 /*
  * Return the position of the most significant bit.
@@ -31,7 +27,6 @@ int GetMSB(int num)
 
     return -1;
 }
-
 
 /*
  * Clear bits from start to end (inclusive).
@@ -53,7 +48,6 @@ int ClearBitRange(int num, int start, int end)
     return 0;
 }
 
-
 /*
  * Rotate bits left by d positions.
  *
@@ -71,7 +65,6 @@ int RotateLeft(int num, int d)
 
     return 0;
 }
-
 
 /*
  * Swap odd and even bit positions.

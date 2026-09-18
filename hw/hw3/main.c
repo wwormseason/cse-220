@@ -4,7 +4,6 @@
 #include "MyIntegers.h"
 #include "Myfloat.h"
 
-
 int main()
 {
 
@@ -15,7 +14,7 @@ int main()
        This file is not graded. Your actual test cases belong in
        tests/, using Criterion, and are run with make test.
     */
-
+    printf(ToggleBit(0, 3));
 
     return 0;
 }
