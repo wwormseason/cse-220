@@ -14,7 +14,9 @@ int main()
        This file is not graded. Your actual test cases belong in
        tests/, using Criterion, and are run with make test.
     */
-    printf(ToggleBit(0, 3));
-
+    // printf("%d", ToggleBit(0, 3));
+    // printf("%d", GetMSB(16));
+    // printf("%x", ClearBitRange(0xffffffff, 0, 7));
+    printf("%x", ClearBitRange(0xffffffff, 0, 7));
     return 0;
 }

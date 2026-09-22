@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "MyBitManipulation.h"
 
 /*
@@ -9,8 +10,12 @@
  */
 int ToggleBit(int num, int pos)
 {
-    num |= 1 << pos;
-    return num;
+    int bit_num = 1;
+    for (int i = 0; i < pos; i++)
+    {
+        bit_num *= 2;
+    }
+    return (num ^ bit_num);
 }
 
 /*
@@ -23,9 +28,19 @@ int ToggleBit(int num, int pos)
  */
 int GetMSB(int num)
 {
-    // TODO: implement
-
-    return -1;
+    int count = 0;
+    for (int i = num; i > 0; i /= 2)
+    {
+        count++;
+    }
+    if (count > 0)
+    {
+        return count - 1;
+    }
+    else
+    {
+        return -1;
+    }
 }
 
 /*
@@ -43,9 +58,24 @@ int GetMSB(int num)
  */
 int ClearBitRange(int num, int start, int end)
 {
-    // TODO: implement
-
-    return 0;
+    int count = 0;
+    for (unsigned int i = num; i > 0; i /= 2)
+    {
+        count++;
+    }
+    if (count > (end - start + 1))
+    {
+        for (int j = start; j < end + 1; j++)
+        {
+            int mask = ~(1 << j);
+            num = num & mask;
+        }
+        return num;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 /*
@@ -61,7 +91,10 @@ int ClearBitRange(int num, int start, int end)
  */
 int RotateLeft(int num, int d)
 {
-    // TODO: implement
+    if (d != 0)
+    {
+        return (num << d) | (num >> (32 - d));
+    }
 
     return 0;
 }
