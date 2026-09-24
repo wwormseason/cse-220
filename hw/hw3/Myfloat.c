@@ -40,7 +40,7 @@ float construct_float_sf(
    {
       sign = 0;
    }
-   
+   int exp = exponent - 127;
 
    return *(float *)&f; /* DO NOT CHANGE */
 }

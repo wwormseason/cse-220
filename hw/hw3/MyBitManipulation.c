@@ -28,6 +28,10 @@ int ToggleBit(int num, int pos)
  */
 int GetMSB(int num)
 {
+    if (num < 0)
+    {
+        return 31;
+    }
     int count = 0;
     for (int i = num; i > 0; i /= 2)
     {
@@ -58,6 +62,10 @@ int GetMSB(int num)
  */
 int ClearBitRange(int num, int start, int end)
 {
+    if (start < 0 || end > 31 || start > end)
+    {
+        return num;
+    }
     int count = 0;
     for (unsigned int i = num; i > 0; i /= 2)
     {
@@ -91,12 +99,15 @@ int ClearBitRange(int num, int start, int end)
  */
 int RotateLeft(int num, int d)
 {
-    if (d != 0)
+    if (d > 32)
     {
-        return (num << d) | (num >> (32 - d));
+        d = d %= 32;
     }
-
-    return 0;
+    if (d == 0)
+    {
+        return 0;
+    }
+    return (num << d) | (num >> (32 - d)) & ~(-1 << d);
 }
 
 /*
@@ -104,7 +115,21 @@ int RotateLeft(int num, int d)
  */
 int SwapOddEvenBits(int num)
 {
-    // TODO: implement
+    for (int i = 0; i < 32; i += 2)
+    {
+        int i_bit = (num >> i) & 1;
+        int i1_bit = (num >> (i + 1)) & 1;
+        num = num - (i_bit << i) + (i1_bit << i) - (i1_bit << (i + 1)) + (i_bit << (i + 1));
+    }
+    return num;
+}
 
-    return 0;
+void test(int num)
+{
+    if (num & 1)
+        printf("Odd");
+    else
+    {
+        printf('Even');
+    }
 }
