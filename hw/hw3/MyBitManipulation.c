@@ -10,12 +10,13 @@
  */
 int ToggleBit(int num, int pos)
 {
-    int bit_num = 1;
-    for (int i = 0; i < pos; i++)
+    if (pos > 31)
     {
-        bit_num *= 2;
+        return num;
     }
-    return (num ^ bit_num);
+    int mask = 1 << pos;
+    unsigned int toggled = (num ^ mask);
+    return toggled;
 }
 
 /*
@@ -122,14 +123,4 @@ int SwapOddEvenBits(int num)
         num = num - (i_bit << i) + (i1_bit << i) - (i1_bit << (i + 1)) + (i_bit << (i + 1));
     }
     return num;
-}
-
-void test(int num)
-{
-    if (num & 1)
-        printf("Odd");
-    else
-    {
-        printf('Even');
-    }
 }

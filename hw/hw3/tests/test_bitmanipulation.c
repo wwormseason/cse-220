@@ -2,20 +2,22 @@
 
 #include "MyBitManipulation.h"
 
-
 Test(ToggleBit, example)
 {
     cr_assert_eq(
-        ToggleBit(0,3),
-        8
-    );
+        ToggleBit(0, 3),
+        8);
+    cr_assert_eq(
+        ToggleBit(0, 33),
+        0);
+    cr_assert_eq(
+        ToggleBit(0, 31),
+        0);
 }
-
 
 Test(GetMSB, example)
 {
     cr_assert_eq(
         GetMSB(16),
-        4
-    );
+        4);
 }
