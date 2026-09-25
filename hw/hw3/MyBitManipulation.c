@@ -106,7 +106,7 @@ int RotateLeft(int num, int d)
     }
     if (d == 0)
     {
-        return 0;
+        return num;
     }
     return (num << d) | (num >> (32 - d)) & ~(-1 << d);
 }

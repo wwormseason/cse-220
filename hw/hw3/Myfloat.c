@@ -41,6 +41,18 @@ float construct_float_sf(
       sign = 0;
    }
    int exp = exponent - 127;
+   for (int i = 0; i < exp; i++)
+   {
+      fraction *= 10;
+   }
+   if (sign)
+   {
+      f = fraction;
+   }
+   else
+   {
+      f = -fraction;
+   }
 
    return *(float *)&f; /* DO NOT CHANGE */
 }

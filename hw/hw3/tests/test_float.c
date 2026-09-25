@@ -2,7 +2,6 @@
 
 #include "Myfloat.h"
 
-
 Test(construct_float_sf, positive_5_5)
 {
     /* sign_bit = 0x00 (positive), exponent = 0x81 (excess-127 -> 2),
@@ -11,6 +10,5 @@ Test(construct_float_sf, positive_5_5)
     cr_assert_float_eq(
         construct_float_sf(0x00, 0x81, 0x300000),
         5.5,
-        1e-6
-    );
+        1e-6);
 }
