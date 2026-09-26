@@ -12,10 +12,10 @@ int ToggleBit(int num, int pos)
 {
     if (pos >= 31)
     {
-        return num;
+        return num; // special circumstance
     }
-    int mask = 1 << pos;
-    int toggled = (num ^ mask);
+    int mask = 1 << pos;        // create mask for bit at index pos
+    int toggled = (num ^ mask); // use mask on num
 
     return toggled;
 }
@@ -32,16 +32,16 @@ int GetMSB(int num)
 {
     if (num < 0)
     {
-        return 31;
+        return 31; // special circumstance
     }
     else if (num == 0)
     {
-        return -1;
+        return -1; // special circumstance
     }
     int count = 0;
     for (int i = num; i > 0; i /= 2)
     {
-        count++;
+        count++; // index of MSB of num
     }
     return count - 1;
 }
@@ -63,19 +63,19 @@ int ClearBitRange(int num, int start, int end)
 {
     if (start < 0 || end > 31 || start > end)
     {
-        return num;
+        return num; // special circumstances
     }
     int count = 0;
     for (unsigned int i = num; i > 0; i /= 2)
     {
-        count++;
+        count++; // get index of MSB of num
     }
     if (count > (end - start + 1) && (start == 0))
     {
         for (int j = start; j < end + 1; j++)
         {
-            int mask = ~(1 << j);
-            num = num & mask;
+            int mask = ~(1 << j); // create mask for jth bit
+            num = num & mask;     // use mask on num
         }
         return num;
     }
@@ -106,9 +106,9 @@ int RotateLeft(int num, int d)
     {
         d %= 32;
     }
-    int left = (num << d);
-    int right = (num >> (32 - d));
-    int rotated = left | right;
+    int left = (num << d);         // original shift
+    int right = (num >> (32 - d)); // discarded bits
+    int rotated = left | right;    // discarded bits added to the back
     return rotated;
 }
 
@@ -119,9 +119,9 @@ int SwapOddEvenBits(int num)
 {
     for (int i = 0; i < 32; i += 2)
     {
-        int i_bit = (num >> i) & 1;
-        int i1_bit = (num >> (i + 1)) & 1;
-        num = num - (i_bit << i) + (i1_bit << i) - (i1_bit << (i + 1)) + (i_bit << (i + 1));
+        int i_bit = (num >> i) & 1;                                                          // get ith bit
+        int i1_bit = (num >> (i + 1)) & 1;                                                   // get i + 1th bit
+        num = num - (i_bit << i) + (i1_bit << i) - (i1_bit << (i + 1)) + (i_bit << (i + 1)); // replace ith bit with i + 1th bit and i + 1th bit with ith bit
     }
     return num;
 }

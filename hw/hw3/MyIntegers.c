@@ -45,18 +45,18 @@ void repr_convert(
         {
             if (repr == 0x80000000)
             {
-                printf("%x", 0);
+                printf("%x", 0); // special circumstance
                 return;
             }
             int sign = repr >> 31;
             if (sign > 0)
             {
                 repr <<= 1;
-                repr >>= 1;
-                repr ^= 0xFFFFFFFF;
-                repr += 1;
+                repr >>= 1;         // remove sign bit
+                repr ^= 0xFFFFFFFF; // toggle all bits
+                repr += 1;          // add 1 (two's complement)
                 sign <<= 31;
-                repr |= sign;
+                repr |= sign; // return sign bit
             }
         }
         else if (source_repr == '2')
@@ -65,7 +65,7 @@ void repr_convert(
         }
         else
         {
-            printf("error");
+            printf("error"); // special circumstance
             return;
         }
     }
@@ -75,16 +75,16 @@ void repr_convert(
         {
             if (repr == 0x80000000)
             {
-                printf("undefined");
+                printf("undefined"); // special circumstance
                 return;
             }
             int sign = repr >> 31;
             if (sign > 0)
             {
                 repr <<= 1;
-                repr >>= 1;
-                repr ^= 0xFFFFFFFF;
-                repr += 1;
+                repr >>= 1;         // remove sign bit
+                repr ^= 0xFFFFFFFF; // toggle all bits
+                repr += 1;          // add 1 (two's complement)
             }
             else
             {
@@ -95,20 +95,20 @@ void repr_convert(
         {
             if (repr == 0x80000000)
             {
-                printf("%x", 0);
+                printf("%x", 0); // special circumstance
                 return;
             }
             // do nothing ᕕ( ᐛ )ᕗ
         }
         else
         {
-            printf("error");
+            printf("error"); // special circumstance
             return;
         }
     }
     else
     {
-        printf("error");
+        printf("error"); // special circumstance
         return;
     }
     printf("%x", repr);

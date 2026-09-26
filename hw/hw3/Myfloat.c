@@ -32,14 +32,14 @@ float construct_float_sf(
       ((unsigned int)exponent & 0xFF), and sign extension takes care
       of recovering the original bit pattern for you.
    */
-   unsigned int sign = ((unsigned int)(sign_bit & 0x01) << 31);
-   unsigned int exp = ((unsigned int)(exponent & 0xFF) << 23);
-   unsigned int frac = (fraction & 0x7FFFFF);
+   unsigned int sign = ((unsigned int)(sign_bit & 0x01) << 31); // isolate sign bit
+   unsigned int exp = ((unsigned int)(exponent & 0xFF) << 23);  // isolate exponent
+   unsigned int frac = (fraction & 0x7FFFFF);                   // isolate fraction
    if ((exp | frac) == 0)
    {
-      sign = 0;
+      sign = 0; // special circumstance
    }
-   f = sign | exp | frac;
+   f = sign | exp | frac; // combination of all parts
 
    return *(float *)&f; /* DO NOT CHANGE */
 }
