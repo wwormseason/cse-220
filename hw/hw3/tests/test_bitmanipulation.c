@@ -30,8 +30,8 @@ Test(GetMSB, example)
         GetMSB(0),
         -1);
     cr_assert_eq(
-        GetMSB(1),
-        1);
+        GetMSB(-1),
+        31);
 }
 
 Test(ClearBitRange, example)
@@ -66,8 +66,8 @@ Test(RotateLeft, example)
 Test(SwapOddEvenBits, example)
 {
     cr_assert_eq(
-        SwapOddEvenBits(127),
-        127);
+        SwapOddEvenBits(255),
+        255);
     cr_assert_eq(
         SwapOddEvenBits(2),
         1);

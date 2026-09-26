@@ -10,12 +10,13 @@
  */
 int ToggleBit(int num, int pos)
 {
-    if (pos > 31)
+    if (pos >= 31)
     {
         return num;
     }
     int mask = 1 << pos;
-    unsigned int toggled = (num ^ mask);
+    int toggled = (num ^ mask);
+
     return toggled;
 }
 
@@ -33,19 +34,16 @@ int GetMSB(int num)
     {
         return 31;
     }
+    else if (num == 0)
+    {
+        return -1;
+    }
     int count = 0;
     for (int i = num; i > 0; i /= 2)
     {
         count++;
     }
-    if (count > 0)
-    {
-        return count - 1;
-    }
-    else
-    {
-        return -1;
-    }
+    return count - 1;
 }
 
 /*
@@ -72,7 +70,7 @@ int ClearBitRange(int num, int start, int end)
     {
         count++;
     }
-    if (count > (end - start + 1))
+    if (count > (end - start + 1) && (start == 0))
     {
         for (int j = start; j < end + 1; j++)
         {
@@ -100,15 +98,18 @@ int ClearBitRange(int num, int start, int end)
  */
 int RotateLeft(int num, int d)
 {
-    if (d > 32)
-    {
-        d = d %= 32;
-    }
     if (d == 0)
     {
         return num;
     }
-    return (num << d) | (num >> (32 - d)) & ~(-1 << d);
+    if (d > 32)
+    {
+        d %= 32;
+    }
+    int left = (num << d);
+    int right = (num >> (32 - d));
+    int rotated = left | right;
+    return rotated;
 }
 
 /*

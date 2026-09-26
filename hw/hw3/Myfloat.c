@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "Myfloat.h"
 
 float construct_float_sf(
@@ -31,28 +32,14 @@ float construct_float_sf(
       ((unsigned int)exponent & 0xFF), and sign extension takes care
       of recovering the original bit pattern for you.
    */
-   char sign;
-   if (sign_bit > 0)
-   {
-      sign = 1;
-   }
-   else
+   unsigned int sign = ((unsigned int)(sign_bit & 0x01) << 31);
+   unsigned int exp = ((unsigned int)(exponent & 0xFF) << 23);
+   unsigned int frac = (fraction & 0x7FFFFF);
+   if ((exp | frac) == 0)
    {
       sign = 0;
    }
-   int exp = exponent - 127;
-   for (int i = 0; i < exp; i++)
-   {
-      fraction *= 10;
-   }
-   if (sign)
-   {
-      f = fraction;
-   }
-   else
-   {
-      f = -fraction;
-   }
+   f = sign | exp | frac;
 
    return *(float *)&f; /* DO NOT CHANGE */
 }

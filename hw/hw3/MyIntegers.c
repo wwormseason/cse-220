@@ -43,10 +43,21 @@ void repr_convert(
     {
         if (source_repr == 'S')
         {
-            repr = repr << 1;
-            repr = repr >> 1;
-            repr = repr ^ 0xFFFFFFFF;
-            repr = repr + 1;
+            if (repr == 0x80000000)
+            {
+                printf("%x", 0);
+                return;
+            }
+            int sign = repr >> 31;
+            if (sign > 0)
+            {
+                repr <<= 1;
+                repr >>= 1;
+                repr ^= 0xFFFFFFFF;
+                repr += 1;
+                sign << 31;
+                repr |= sign;
+            }
         }
         else if (source_repr == '2')
         {
@@ -54,7 +65,7 @@ void repr_convert(
         }
         else
         {
-            print("error");
+            printf("error");
             return;
         }
     }
@@ -62,26 +73,42 @@ void repr_convert(
     {
         if (source_repr == '2')
         {
-            repr = repr - 1;
-            int placeholder = repr << 1;
-            placeholder = placeholder >> 1;
-            placeholder = placeholder ^ 0xFFFFFFFF;
+            if (repr == 0x80000000)
+            {
+                printf("undefined");
+                return;
+            }
             int sign = repr >> 31;
-            sign = sign << 31;
-            repr = placeholder + sign;
+            if (sign > 0)
+            {
+                repr <<= 1;
+                repr >>= 1;
+                repr ^= 0xFFFFFFFF;
+                repr += 1;
+            }
+            else
+            {
+                // nuthing
+            }
         }
         else if (source_repr == 'S')
         {
+            if (repr == 0x80000000)
+            {
+                printf("%x", 0);
+                return;
+            }
+            // do nothing ᕕ( ᐛ )ᕗ
         }
         else
         {
-            print("error");
+            printf("error");
             return;
         }
     }
     else
     {
-        print("error");
+        printf("error");
         return;
     }
     printf("%x", repr);
