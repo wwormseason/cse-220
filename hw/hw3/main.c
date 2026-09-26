@@ -49,6 +49,5 @@ int main()
     // repr_convert('F', '2', 0x00394812);
     // repr_convert('2', 'F', 0x00394812);
     repr_convert('S', '2', 0x80000001);
-    fflush(stdout);
     return 0;
 }
