@@ -55,7 +55,7 @@ void repr_convert(
                 repr >>= 1;
                 repr ^= 0xFFFFFFFF;
                 repr += 1;
-                sign << 31;
+                sign <<= 31;
                 repr |= sign;
             }
         }
