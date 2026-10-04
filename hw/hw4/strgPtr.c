@@ -11,14 +11,26 @@
  * Remove the (void) lines as you fill each function in. They are only there so
  * the starter kit compiles with -Werror before you have written any code.
  */
+#include <stdio.h>
 #include "strgPtr.h"
 
 int strgLen(const char *s)
 {
     /* TODO: return the number of characters before the terminating '\0'. */
     /* NULL is an error here and returns -1. */
-    (void)s;
-    return 0;
+    // (void)s;
+
+    if (s == NULL)
+    {
+        return -1;
+    }
+    int count = 0;
+    while (*s != '\0')
+    {
+        count++;
+        s++;
+    }
+    return count;
 }
 
 void strgCopy(const char *source, char *destination, size_t size)
@@ -30,9 +42,29 @@ void strgCopy(const char *source, char *destination, size_t size)
      * characters plus the terminator fit. Copy what fits and terminate.
      * Do nothing at all when a pointer is NULL or size is 0.
      */
-    (void)source;
-    (void)destination;
-    (void)size;
+    // (void)source;
+    // (void)destination;
+    // (void)size;
+
+    if (source == NULL || destination == NULL)
+    {
+        return;
+    }
+    if (size == 0)
+    {
+        return;
+    }
+    if (size == 1)
+    {
+        destination = '\0';
+        return;
+    }
+
+    for (int i = 0; i < size - 1; i++)
+    {
+        *(destination + i) = *(source + i);
+        printf("%c", *(destination + i));
+    }
 }
 
 void strgChangeCase(char *s)
@@ -45,7 +77,11 @@ void strgChangeCase(char *s)
      * last character has no right neighbor, so only check the side that
      * exists. Characters that are not letters never change.
      */
-    (void)s;
+    // (void)s;
+    while (*s != '\0')
+    {
+        char *t = s++;
+    }
 }
 
 int strgDiff(const char *s1, const char *s2)
