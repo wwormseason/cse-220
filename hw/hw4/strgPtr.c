@@ -78,10 +78,41 @@ void strgChangeCase(char *s)
      * exists. Characters that are not letters never change.
      */
     // (void)s;
+    char *t;
+    *t = *(s + 1);
+    printf("%c", *s);
+    printf("%c", *t);
+    int i = 0;
     while (*s != '\0')
     {
-        char *t = s++;
+        // printf("does the while loop at least run");
+        char u = *t;
+        char v = '9';
+        printf("%d", v);
+        if (u >= 48 && u <= 57)
+        {
+            printf("hai");
+            printf("%c", *t);
+            *s = *(s + 3);
+            *t = *(t + 3);
+        }
+        else
+        {
+            printf("no numeric");
+            *s = (*s) ^ 32;
+            s++;
+            t++;
+            printf("else over");
+        }
+        printf("loop");
     }
+    printf("Where does this even terminate?");
+    while (*s != '\0')
+    {
+        printf("%c", *s);
+        s++;
+    }
+    printf("CAN THIS DO SOMETHING?????");
 }
 
 int strgDiff(const char *s1, const char *s2)
@@ -93,9 +124,20 @@ int strgDiff(const char *s1, const char *s2)
      * When one string ends first, that position is the index of its '\0',
      * so "abc" and "abcd" differ at index 3.
      */
-    (void)s1;
-    (void)s2;
-    return 0;
+    // (void)s1;
+    // (void)s2;
+    int index = 0;
+    while (*s1 != '\0' && *s2 != '\0')
+    {
+        if (*s1 != *s2)
+        {
+            return index;
+        }
+        index++;
+        s1++;
+        s2++;
+    }
+    return index;
 }
 
 void strgInterleave(const char *s1, const char *s2, char *d, size_t size)
@@ -109,10 +151,37 @@ void strgInterleave(const char *s1, const char *s2, char *d, size_t size)
      * two writes of a pair: the character from s1 may fit while the one from
      * s2 does not.
      */
-    (void)s1;
-    (void)s2;
-    (void)d;
-    (void)size;
+    // (void)s1;
+    // (void)s2;
+    // (void)d;
+    // (void)size;
+    int length = 0;
+    int first = 0;
+    while (length < size)
+    {
+        if (first == 0)
+        {
+            *d = s1;
+            d++;
+            s1++;
+            length++;
+            first = 1;
+        }
+        else
+        {
+            *d = s2;
+            d++;
+            s2++;
+            length++;
+            first = 0;
+        }
+    }
+    printf("interlveaing done \n");
+    while (*d != '\0')
+    {
+        printf("%c", *d);
+        d++;
+    }
 }
 
 void strgReverseLetters(char *s)
