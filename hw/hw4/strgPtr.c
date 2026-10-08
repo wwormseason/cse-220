@@ -92,9 +92,22 @@ void strgChangeCase(char *s)
         if (i < 1)
         {
             right = s[i + 1];
-            if ((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z'))
+            if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
             {
-                s[i] = s[i] + 32;
+                s[i] = s[i] ^ 32;
+                printf(" %c", s[i]);
+            }
+            else
+            {
+                printf("%c", s[i]);
+            }
+        }
+        else if (i == length - 1)
+        {
+            left = s[i - 1];
+            if (((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
+            {
+                s[i] = s[i] ^ 32;
                 printf(" %c", s[i]);
             }
             else
@@ -106,9 +119,9 @@ void strgChangeCase(char *s)
         {
             right = s[i + 1];
             left = s[i - 1];
-            if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z')))
+            if ((((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z'))) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
             {
-                s[i] = s[i] + 32;
+                s[i] = s[i] ^ 32;
                 printf("%c", s[i]);
             }
             else
@@ -167,34 +180,25 @@ void strgInterleave(const char *s1, const char *s2, char *d, size_t size)
     // (void)s2;
     // (void)d;
     // (void)size;
-    // const char *s = d;
     int length = 0;
-    int first = 1;
     while (length < size - 1)
     {
-        if (first && *s1 != '\0')
+        if (((length % 2 == 0) && *s1 != '\0') || (*s2 == '\0' && *s1 != '\0'))
         {
             *d = *s1;
-            d++;
+            printf("%c", *d);
             s1++;
-            length++;
-            first = 0;
         }
-        else if (!first && *s2 != '\0')
+        else if (*s2 != '\0')
         {
             *d = *s2;
-            d++;
+            printf("%c", *d);
             s2++;
-            length++;
-            first = 1;
         }
-        else
-        {
-            break;
-        }
+        d++;
+        length++;
     }
     *d = '\0';
-    // printf("%s", s);
 }
 
 void strgReverseLetters(char *s)
