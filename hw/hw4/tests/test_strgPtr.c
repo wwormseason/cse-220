@@ -18,7 +18,6 @@ Test(strgLen, counts_characters)
 {
     cr_assert_eq(strgLen("Stony Brook"), 11);
     cr_assert_eq(strgLen(""), 0);
-    // my tests
 }
 
 Test(strgLen, null_is_an_error)
@@ -69,27 +68,28 @@ Test(strgLen, len_counting_characters)
     cr_assert_eq(strgLen("pneumonoultramicroscopicsilicovolcanoconiosis"), 45);
     cr_assert_eq(strgLen("pneumonoultramicroscopicsilicovolcanoconiosis"), 45);
     cr_assert_eq(strgLen("                 "), 17);
-    cr_assert_eq(strgLen("\0"), 2);
+    cr_assert_eq(strgLen("5"), 1);
 }
 
-Test(strgCopy, copy_source_is_nul)
+Test(strgCopy, copy_source_is_null)
 {
-    char destination[10];
+    char destination[1] = {'a'};
 
     strgCopy(NULL, destination, sizeof destination);
-    cr_assert_str_eq(destination, "");
+    cr_assert_str_eq(destination, "a");
 }
 
 Test(strgCopy, copy_destination_is_null)
 {
+    char *destination = NULL;
 
-    strgCopy("test", NULL, sizeof destination);
-    cr_assert_str_eq(destination, NULL);
+    strgCopy("test", destination, sizeof destination);
+    cr_assert_eq(destination, NULL);
 }
 
 Test(strgCopy, copy_size_is_zero)
 {
-    destination[0];
+    char destination[0];
 
     strgCopy("test", destination, sizeof destination);
     cr_assert_str_eq(destination, "");
@@ -97,7 +97,7 @@ Test(strgCopy, copy_size_is_zero)
 
 Test(strgCopy, copy_size_is_one)
 {
-    destination[1];
+    char destination[1];
 
     strgCopy("test", destination, sizeof destination);
     cr_assert_str_eq(destination, "");
@@ -105,18 +105,18 @@ Test(strgCopy, copy_size_is_one)
 
 Test(strgCopy, copy_long_string_with_short_buffer)
 {
-    destination[14];
+    char destination[14];
 
     strgCopy("This is a test of my code.", destination, sizeof destination);
-    cr_assert_str_eq(destination, "This is a test");
+    cr_assert_str_eq(destination, "This is a tes");
 }
 
 Test(strgChangeCase, change_input_is_null)
 {
-    char s[] = NULL;
+    char *s = NULL;
 
     strgChangeCase(s);
-    cr_assert_str_eq(s, NULL);
+    cr_assert_eq(s, NULL);
 }
 
 Test(strgChangeCase, change_input_is_all_digits)
@@ -154,21 +154,21 @@ Test(strgChangeCase, change_output_should_have_no_change)
 Test(strgDiff, diff_strings_are_identical)
 {
 
-    cr_assert_str_eq(strgDiff("Hello", "Hello"), -1);
+    cr_assert_eq(strgDiff("Hello", "Hello"), -1);
 }
 
 Test(strgDiff, diff_s1_or_s2_null)
 {
 
-    cr_assert_str_eq(strgDiff(NULL, "Hello"), -2);
-    cr_assert_str_eq(strgDiff("waei", NULL), -2);
+    cr_assert_eq(strgDiff(NULL, "Hello"), -2);
+    cr_assert_eq(strgDiff("waei", NULL), -2);
 }
 
 Test(strgDiff, string_difference)
 {
 
-    cr_assert_str_eq(strgDiff("abc", "abcd"), 3);
-    cr_assert_str_eq(strgDiff("me-time", "Metime"), 0);
+    cr_assert_eq(strgDiff("abc", "abcd"), 3);
+    cr_assert_eq(strgDiff("me-time", "Metime"), 0);
 }
 
 Test(strgInterleave, interleave_s1_null)
@@ -181,10 +181,10 @@ Test(strgInterleave, interleave_s1_null)
 
 Test(strgInterleave, interleave_d_null)
 {
-    char destination[2];
+    char *destination = NULL;
 
-    strgInterleave("Aaa aaaAaaAaaAAaAAaaaaaAaaAaAAAaaaaA", "b", NULL, sizeof destination);
-    cr_assert_str_eq(NULL, NULL);
+    strgInterleave("Aaa aaaAaaAaaAAaAAaaaaaAaaAaAAAaaaaA", "b", destination, sizeof destination);
+    cr_assert_eq(destination, NULL);
 }
 
 Test(strgInterleave, interleave_size_zero)
@@ -229,10 +229,10 @@ Test(strgReverseLetters, reverse_this_string_1)
 
 Test(strgReverseLetters, reverse_s_is_null)
 {
-    char s[] = NULL;
+    char *s = NULL;
 
     strgReverseLetters(s);
-    cr_assert_str_eq(s, NULL);
+    cr_assert_eq(s, NULL);
 }
 
 Test(strgReverseLetters, reverse_empty_string)

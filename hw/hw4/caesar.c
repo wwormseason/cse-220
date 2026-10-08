@@ -7,7 +7,7 @@
  *
  * Remove the (void) lines as you fill each function in. They are only there so
  * the starter kit compiles with -Werror before you have written any code.
- *
+ */
 
 /* The end of message marker. It is never encrypted or decrypted. */
 
@@ -55,7 +55,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
     }
     int index = 0;
 
-    while (*plaintext != '\0' && index < (size - 8))
+    while (*plaintext != '\0' && (size_t)index < (size - 8))
     {
         if (*plaintext >= 'a' && *plaintext <= 'z')
         {

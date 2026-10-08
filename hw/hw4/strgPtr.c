@@ -61,7 +61,7 @@ void strgCopy(const char *source, char *destination, size_t size)
     }
     char d;
 
-    for (int i = 0; i < size - 1; i++)
+    for (int i = 0; (size_t)i < size - 1; i++)
     {
         *(destination + i) = *(source + i);
         d = *(destination + i);
@@ -93,14 +93,15 @@ void strgChangeCase(char *s)
         {
             right = s[i + 1];
             if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
-            {
-                s[i] = s[i] ^ 32;
-                printf(" %c", s[i]);
-            }
-            else
-            {
-                printf("%c", s[i]);
-            }
+                if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
+                {
+                    s[i] = s[i] ^ 32;
+                    printf(" %c", s[i]);
+                }
+                else
+                {
+                    printf("%c", s[i]);
+                }
         }
         else if (i == length - 1)
         {
@@ -120,14 +121,15 @@ void strgChangeCase(char *s)
             right = s[i + 1];
             left = s[i - 1];
             if ((((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z'))) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
-            {
-                s[i] = s[i] ^ 32;
-                printf("%c", s[i]);
-            }
-            else
-            {
-                printf("%c", s[i]);
-            }
+                if ((((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z'))) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
+                {
+                    s[i] = s[i] ^ 32;
+                    printf("%c", s[i]);
+                }
+                else
+                {
+                    printf("%c", s[i]);
+                }
         }
     }
 }

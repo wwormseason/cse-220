@@ -68,7 +68,7 @@ Test(encryptCaesar, encrypt_text_null)
 {
     char ciphertext[20];
 
-    cr_assert_str_eq(encryptCaesar(NULL, ciphertext, sizeof ciphertext, 1), -2);
+    cr_assert_eq(encryptCaesar(NULL, ciphertext, sizeof ciphertext, 1), -2);
 }
 
 Test(encryptCaesar, encrypt_empty_string)
