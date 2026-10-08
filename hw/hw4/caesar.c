@@ -7,10 +7,13 @@
  *
  * Remove the (void) lines as you fill each function in. They are only there so
  * the starter kit compiles with -Werror before you have written any code.
-#include "caesar.h"
-#include "strgPtr.h"
+ *
 
 /* The end of message marker. It is never encrypted or decrypted. */
+
+#include "caesar.h"
+#include "strgPtr.h"
+#include <stdio.h>
 #define EOM "__EOM__"
 #define EOM_LEN 7
 
@@ -37,11 +40,80 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
      * value you end up with is inside the range before you turn it back into
      * a character.
      */
-    (void)plaintext;
-    (void)ciphertext;
-    (void)size;
-    (void)key;
-    return 0;
+    // (void)plaintext;
+    // (void)ciphertext;
+    // (void)size;
+    // (void)key;
+
+    if (size < 8)
+    {
+        return -1;
+    }
+    if (plaintext == NULL || ciphertext == NULL)
+    {
+        return -2;
+    }
+    int index = 0;
+
+    while (*plaintext != '\0' && index < (size - 8))
+    {
+        if (*plaintext >= 'a' && *plaintext <= 'z')
+        {
+
+            int shift = (key + index) % 26;
+            if (shift < 0)
+            {
+                shift += 26;
+            }
+            *ciphertext = 'a' + ((*plaintext - 'a' + shift) % 26);
+            // printf("%c", *ciphertext);
+            ciphertext++;
+            plaintext++;
+            index++;
+        }
+        else if (*plaintext >= 'A' && *plaintext <= 'Z')
+        {
+            int shift = (key + index) % 26;
+            if (shift < 0)
+            {
+                shift += 26;
+            }
+            *ciphertext = 'A' + ((*plaintext - 'A' + shift) % 26);
+            // printf("%c", *ciphertext);
+            ciphertext++;
+            plaintext++;
+            index++;
+        }
+        else if (*plaintext >= '0' && *plaintext <= '9')
+        {
+            int shift = (key + 2 * index) % 10;
+            if (shift < 0)
+            {
+                shift += 10;
+            }
+            *ciphertext = '0' + ((*plaintext - '0' + shift) % 10);
+            // printf("%c", *ciphertext);
+            ciphertext++;
+            plaintext++;
+            index++;
+        }
+        else
+        {
+            *ciphertext = *plaintext;
+            // printf("%c", *ciphertext);
+            ciphertext++;
+            plaintext++;
+            index++;
+        }
+    }
+    for (int i = 0; i < EOM_LEN; i++)
+    {
+        *ciphertext = EOM[i];
+        // printf("%c", *ciphertext);
+        ciphertext++;
+    }
+    *ciphertext = '\0';
+    return index;
 }
 
 int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
@@ -63,9 +135,107 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
      * you actually wrote. Decrypting means shifting backward by the same
      * amounts that encryption shifted forward, using the same indexes.
      */
-    (void)ciphertext;
-    (void)plaintext;
-    (void)size;
-    (void)key;
-    return 0;
+    // (void)ciphertext;
+    // (void)plaintext;
+    // (void)size;
+    // (void)key;
+
+    if (size < 1)
+    {
+        return 0;
+    }
+    if (ciphertext == NULL || plaintext == NULL)
+    {
+        return -2;
+    }
+    int index = 0;
+    int length = strgLen(ciphertext);
+    int eom_count = 0;
+    for (int i = EOM_LEN; i > 0; i--)
+    {
+        // printf("\n %c", *ciphertext);
+        // printf(" %c ", EOM[i]);
+
+        if (ciphertext[length - i] != EOM[EOM_LEN - i])
+        {
+            return -1;
+        }
+    }
+    while (*ciphertext != '\0' && index < (length - EOM_LEN))
+    {
+        if (*ciphertext >= 'a' && *ciphertext <= 'z')
+        {
+
+            int shift = (key + index) % 26;
+            if (shift < 0)
+            {
+                shift += 26;
+            }
+            *plaintext = 'a' + ((*ciphertext - 'a' - shift) % 26);
+            printf("%c", *plaintext);
+            plaintext++;
+            ciphertext++;
+            index++;
+        }
+        else if (*plaintext >= 'A' && *plaintext <= 'Z')
+        {
+            if (eom_count > 0)
+            {
+                switch (*plaintext)
+                {
+                case 'E':
+                    eom_count++;
+                    break;
+                case 'O':
+                    eom_count++;
+                    break;
+                case 'M':
+                    eom_count++;
+                    break;
+                }
+            }
+            else
+            {
+                int shift = (key + index) % 26;
+                if (shift < 0)
+                {
+                    shift += 26;
+                }
+                *plaintext = 'A' + ((*ciphertext - 'A' - shift) % 26);
+                printf("%c", *plaintext);
+                ciphertext++;
+                plaintext++;
+                index++;
+            }
+        }
+        else if (*ciphertext >= '0' && *ciphertext <= '9')
+        {
+            int shift = (key + 2 * index) % 10;
+            if (shift < 0)
+            {
+                shift += 10;
+            }
+            *plaintext = '0' + ((*ciphertext - '0' - shift) % 10);
+            printf("%c", *plaintext);
+            plaintext++;
+            ciphertext++;
+            index++;
+        }
+        else
+        {
+            if (eom_count > 0 && *ciphertext == '_')
+            {
+                eom_count++;
+            }
+            else
+            {
+                *plaintext = *ciphertext;
+                printf("%c", *plaintext);
+                plaintext++;
+                ciphertext++;
+                index++;
+            }
+        }
+    }
+    return index;
 }

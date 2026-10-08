@@ -10,6 +10,8 @@ int main()
   // strgCopy("Computer Science", destination, 5);
   // strgChangeCase("CSE220");
   // printf("%d", strgDiff("abc", "abcd"));
-  strgInterleave("abc", "123", destination, 20);
+  // strgInterleave("abc", "123", destination, 20);
+  // printf("%d", encryptCaesar("System Fundamentals", destination, 30, 1));
+  printf("%d", decryptCaesar("__EOM__", destination, 20, 5));
   return 0;
 }
