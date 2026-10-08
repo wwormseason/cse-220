@@ -18,6 +18,7 @@ Test(strgLen, counts_characters)
 {
     cr_assert_eq(strgLen("Stony Brook"), 11);
     cr_assert_eq(strgLen(""), 0);
+    // my tests
 }
 
 Test(strgLen, null_is_an_error)
@@ -61,3 +62,191 @@ Test(strgChangeCase, skips_letters_next_to_digits)
  *   cr_assert_null(pointer)              the pointer is NULL
  *   cr_assert(condition)                 the condition is true
  */
+
+Test(strgLen, len_counting_characters)
+{
+    cr_assert_eq(strgLen("C"), 1);
+    cr_assert_eq(strgLen("pneumonoultramicroscopicsilicovolcanoconiosis"), 45);
+    cr_assert_eq(strgLen("pneumonoultramicroscopicsilicovolcanoconiosis"), 45);
+    cr_assert_eq(strgLen("                 "), 17);
+    cr_assert_eq(strgLen("\0"), 2);
+}
+
+Test(strgCopy, copy_source_is_nul)
+{
+    char destination[10];
+
+    strgCopy(NULL, destination, sizeof destination);
+    cr_assert_str_eq(destination, "");
+}
+
+Test(strgCopy, copy_destination_is_null)
+{
+
+    strgCopy("test", NULL, sizeof destination);
+    cr_assert_str_eq(destination, NULL);
+}
+
+Test(strgCopy, copy_size_is_zero)
+{
+    destination[0];
+
+    strgCopy("test", destination, sizeof destination);
+    cr_assert_str_eq(destination, "");
+}
+
+Test(strgCopy, copy_size_is_one)
+{
+    destination[1];
+
+    strgCopy("test", destination, sizeof destination);
+    cr_assert_str_eq(destination, "");
+}
+
+Test(strgCopy, copy_long_string_with_short_buffer)
+{
+    destination[14];
+
+    strgCopy("This is a test of my code.", destination, sizeof destination);
+    cr_assert_str_eq(destination, "This is a test");
+}
+
+Test(strgChangeCase, change_input_is_null)
+{
+    char s[] = NULL;
+
+    strgChangeCase(s);
+    cr_assert_str_eq(s, NULL);
+}
+
+Test(strgChangeCase, change_input_is_all_digits)
+{
+    char s[] = "115 399218104";
+
+    strgChangeCase(s);
+    cr_assert_str_eq(s, "115 399218104");
+}
+
+Test(strgChangeCase, change_input_is_all_lowercase_alphabetic)
+{
+    char s[] = "house of leaves";
+
+    strgChangeCase(s);
+    cr_assert_str_eq(s, "HOUSE OF LEAVES");
+}
+
+Test(strgChangeCase, change_input_is_all_uppercase_digits)
+{
+    char s[] = "KING IN YELLOW";
+
+    strgChangeCase(s);
+    cr_assert_str_eq(s, "king in yellow");
+}
+
+Test(strgChangeCase, change_output_should_have_no_change)
+{
+    char s[] = "a9dg9w0c4";
+
+    strgChangeCase(s);
+    cr_assert_str_eq(s, "a9dg9w0c4");
+}
+
+Test(strgDiff, diff_strings_are_identical)
+{
+
+    cr_assert_str_eq(strgDiff("Hello", "Hello"), -1);
+}
+
+Test(strgDiff, diff_s1_or_s2_null)
+{
+
+    cr_assert_str_eq(strgDiff(NULL, "Hello"), -2);
+    cr_assert_str_eq(strgDiff("waei", NULL), -2);
+}
+
+Test(strgDiff, string_difference)
+{
+
+    cr_assert_str_eq(strgDiff("abc", "abcd"), 3);
+    cr_assert_str_eq(strgDiff("me-time", "Metime"), 0);
+}
+
+Test(strgInterleave, interleave_s1_null)
+{
+    char destination[2];
+
+    strgInterleave(NULL, "im leafing lol", destination, sizeof destination);
+    cr_assert_str_eq(destination, "");
+}
+
+Test(strgInterleave, interleave_d_null)
+{
+    char destination[2];
+
+    strgInterleave("Aaa aaaAaaAaaAAaAAaaaaaAaaAaAAAaaaaA", "b", NULL, sizeof destination);
+    cr_assert_str_eq(NULL, NULL);
+}
+
+Test(strgInterleave, interleave_size_zero)
+{
+    char destination[0];
+
+    strgInterleave("tried cataching fog yesterday", "mist", destination, sizeof destination);
+    cr_assert_str_eq(destination, "");
+}
+
+Test(strgInterleave, interleave_full_and_empty_string)
+{
+    char destination[15];
+
+    strgInterleave("reeee", "", destination, sizeof destination);
+    cr_assert_str_eq(destination, "reeee");
+}
+
+Test(strgInterleave, interleave_these_strings)
+{
+    char destination[15];
+
+    strgInterleave("wowawoza", "nope", destination, sizeof destination);
+    cr_assert_str_eq(destination, "wnoowpaewoza");
+}
+
+Test(strgReverseLetters, reverse_this_string)
+{
+    char s[] = "Hello";
+
+    strgReverseLetters(s);
+    cr_assert_str_eq(s, "olleH");
+}
+
+Test(strgReverseLetters, reverse_this_string_1)
+{
+    char s[] = "Hi, Bob";
+
+    strgReverseLetters(s);
+    cr_assert_str_eq(s, "bo, BiH");
+}
+
+Test(strgReverseLetters, reverse_s_is_null)
+{
+    char s[] = NULL;
+
+    strgReverseLetters(s);
+    cr_assert_str_eq(s, NULL);
+}
+
+Test(strgReverseLetters, reverse_empty_string)
+{
+    char s[] = "";
+
+    strgReverseLetters(s);
+    cr_assert_str_eq(s, "");
+}
+
+Test(strgReverseLetters, reverse_all_non_letters)
+{
+    char s[] = "--21-4,3521";
+
+    strgReverseLetters(s);
+    cr_assert_str_eq(s, "--21-4,3521");
+}

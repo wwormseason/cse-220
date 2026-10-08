@@ -56,7 +56,7 @@ void strgCopy(const char *source, char *destination, size_t size)
     }
     if (size == 1)
     {
-        destination = '\0';
+        destination[0] = '\0';
         return;
     }
     char d;
@@ -80,41 +80,42 @@ void strgChangeCase(char *s)
      * exists. Characters that are not letters never change.
      */
     // (void)s;
-    int len = 0;
-    while (*s != '\0')
+    if (s == NULL)
     {
-        printf("run");
+        return;
+    }
+    int length = strgLen(s);
+    for (int i = 0; i < length; i++)
+    {
         char right;
         char left;
-        if (!len)
+        if (i < 1)
         {
-            right = *(s + 1);
-            if ((right >= '0' && right <= '9') || (*s >= '0' && *s <= '9'))
+            right = s[i + 1];
+            if ((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z'))
             {
-                s++;
+                s[i] = s[i] + 32;
+                printf(" %c", s[i]);
             }
             else
             {
-                *s = *s ^ 32;
-                s++;
+                printf("%c", s[i]);
             }
         }
         else
         {
-            right = *(s + 1);
-            left = *(s - 1);
-            if ((right >= '0' && right <= '9') || (left >= '0' && left <= '9') || (*s >= '0' && *s <= '9'))
+            right = s[i + 1];
+            left = s[i - 1];
+            if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z')))
             {
-                s++;
+                s[i] = s[i] + 32;
+                printf("%c", s[i]);
             }
             else
             {
-                *s = *s ^ 32;
-                s++;
+                printf("%c", s[i]);
             }
         }
-        len = 1;
-        printf("loop end");
     }
 }
 
@@ -130,6 +131,10 @@ int strgDiff(const char *s1, const char *s2)
     // (void)s1;
     // (void)s2;
     int index = 0;
+    if (s1 == NULL || s2 == NULL)
+    {
+        return -2;
+    }
     while (*s1 != '\0' && *s2 != '\0')
     {
         if (*s1 != *s2)
@@ -139,6 +144,10 @@ int strgDiff(const char *s1, const char *s2)
         index++;
         s1++;
         s2++;
+    }
+    if (*s1 == '\0' && *s2 == '\0')
+    {
+        return -1;
     }
     return index;
 }
@@ -198,7 +207,22 @@ void strgReverseLetters(char *s)
      * swapping only when both sides are letters is one way to do this.
      */
     // (void)s;
-    while (*s != '\0')
+    int length = strgLen(s) - 1;
+    for (int i = 0; i < length; i++)
     {
+        int first_char = ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z'));
+        int second_char = ((s[(length)] >= 'a' && s[(length)] <= 'z') || (s[(length)] >= 'A' && s[(length)] <= 'Z'));
+
+        if (first_char && second_char)
+        {
+            char temp = s[i];
+            s[i] = s[length];
+            s[length] = temp;
+        }
+        length--;
+    }
+    for (int i = 0; i < length; i++)
+    {
+        printf("%c", s[i]);
     }
 }

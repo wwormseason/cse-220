@@ -63,3 +63,81 @@ Test(decryptCaesar, reports_a_missing_marker)
  *   cr_assert_str_eq(actual, expected)   two strings have the same contents
  *   cr_assert(condition)                 the condition is true
  */
+
+Test(encryptCaesar, encrypt_text_null)
+{
+    char ciphertext[20];
+
+    cr_assert_str_eq(encryptCaesar(NULL, ciphertext, sizeof ciphertext, 1), -2);
+}
+
+Test(encryptCaesar, encrypt_empty_string)
+{
+    char ciphertext[20];
+
+    cr_assert_eq(encryptCaesar("", ciphertext, sizeof ciphertext, 5), 0);
+    cr_assert_str_eq(ciphertext, "__EOM__");
+}
+
+Test(encryptCaesar, encrypt_long_string)
+{
+    char ciphertext[40];
+
+    cr_assert_eq(encryptCaesar("System Fundamentals", ciphertext, sizeof ciphertext, 1), 19);
+    cr_assert_str_eq(ciphertext, "Tavxjs Ndxomzscjrdl__EOM__");
+}
+
+Test(encryptCaesar, encrypt_long_string_without_enough_buffer)
+{
+    char ciphertext[12];
+
+    cr_assert_eq(encryptCaesar("System Fundamentals", ciphertext, sizeof ciphertext, 1), 4);
+    cr_assert_str_eq(ciphertext, "Tavx__EOM__");
+}
+
+Test(encryptCaesar, encrypt_key_longer_than_26)
+{
+    char ciphertext[20];
+
+    cr_assert_eq(encryptCaesar("Cse220", ciphertext, sizeof ciphertext, 27), 6);
+    cr_assert_str_eq(ciphertext, "Duh911__EOM__");
+}
+
+Test(decryptCaesar, decrypt_text_null)
+{
+    char plaintext[20];
+
+    cr_assert_eq(decryptCaesar(NULL, plaintext, sizeof plaintext, 2), -2);
+}
+
+Test(decryptCaesar, decrypt_empty_string)
+{
+    char plaintext[12];
+
+    cr_assert_eq(decryptCaesar("__EOM__", plaintext, sizeof plaintext, 5), 0);
+    cr_assert_str_eq(plaintext, "");
+}
+
+Test(decryptCaesar, decrypt_key_0)
+{
+    char plaintext[15];
+
+    cr_assert_eq(decryptCaesar("CT__EOM__", plaintext, sizeof plaintext, 0), 2);
+    cr_assert_str_eq(plaintext, "CS");
+}
+
+Test(decryptCaesar, decrypt_key_longer_than_26)
+{
+    char plaintext[20];
+
+    cr_assert_eq(decryptCaesar("Duh911__EOM__", plaintext, sizeof plaintext, 27), 6);
+    cr_assert_str_eq(plaintext, "Cse220");
+}
+
+Test(decryptCaesar, decrypt_key_negative)
+{
+    char plaintext[20];
+
+    cr_assert_eq(decryptCaesar("yac__EOM__", plaintext, sizeof plaintext, -2), 3);
+    cr_assert_str_eq(plaintext, "abc");
+}

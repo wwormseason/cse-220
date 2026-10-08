@@ -66,7 +66,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
                 shift += 26;
             }
             *ciphertext = 'a' + ((*plaintext - 'a' + shift) % 26);
-            // printf("%c", *ciphertext);
+            printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
@@ -79,7 +79,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
                 shift += 26;
             }
             *ciphertext = 'A' + ((*plaintext - 'A' + shift) % 26);
-            // printf("%c", *ciphertext);
+            printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
@@ -92,7 +92,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
                 shift += 10;
             }
             *ciphertext = '0' + ((*plaintext - '0' + shift) % 10);
-            // printf("%c", *ciphertext);
+            printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
@@ -100,7 +100,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
         else
         {
             *ciphertext = *plaintext;
-            // printf("%c", *ciphertext);
+            printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
