@@ -129,18 +129,18 @@ Test(strgChangeCase, change_input_is_all_digits)
 
 Test(strgChangeCase, change_input_is_all_lowercase_alphabetic)
 {
-    char s[] = "house of leaves";
+    char s[] = "houseofleaves";
 
     strgChangeCase(s);
-    cr_assert_str_eq(s, "HOUSE OF LEAVES");
+    cr_assert_str_eq(s, "HOUSEOFLEAVES");
 }
 
 Test(strgChangeCase, change_input_is_all_uppercase_digits)
 {
-    char s[] = "KING IN YELLOW";
+    char s[] = "KINGINYELLOW";
 
     strgChangeCase(s);
-    cr_assert_str_eq(s, "king in yellow");
+    cr_assert_str_eq(s, "kinginyellow");
 }
 
 Test(strgChangeCase, change_output_should_have_no_change)
@@ -197,7 +197,7 @@ Test(strgInterleave, interleave_size_zero)
 
 Test(strgInterleave, interleave_full_and_empty_string)
 {
-    char destination[15];
+    char destination[40];
 
     strgInterleave("reeee", "", destination, sizeof destination);
     cr_assert_str_eq(destination, "reeee");

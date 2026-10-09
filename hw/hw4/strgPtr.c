@@ -93,15 +93,14 @@ void strgChangeCase(char *s)
         {
             right = s[i + 1];
             if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
-                if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
-                {
-                    s[i] = s[i] ^ 32;
-                    printf(" %c", s[i]);
-                }
-                else
-                {
-                    printf("%c", s[i]);
-                }
+            {
+                s[i] = s[i] ^ 32;
+                printf(" %c", s[i]);
+            }
+            else
+            {
+                printf("%c", s[i]);
+            }
         }
         else if (i == length - 1)
         {
@@ -121,15 +120,14 @@ void strgChangeCase(char *s)
             right = s[i + 1];
             left = s[i - 1];
             if ((((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z'))) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
-                if ((((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z'))) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
-                {
-                    s[i] = s[i] ^ 32;
-                    printf("%c", s[i]);
-                }
-                else
-                {
-                    printf("%c", s[i]);
-                }
+            {
+                s[i] = s[i] ^ 32;
+                printf("%c", s[i]);
+            }
+            else
+            {
+                printf("%c", s[i]);
+            }
         }
     }
 }
@@ -183,18 +181,22 @@ void strgInterleave(const char *s1, const char *s2, char *d, size_t size)
     // (void)d;
     // (void)size;
     int length = 0;
-    while (length < size - 1)
+    if (s1 == NULL || s2 == NULL || d == NULL || size == 0)
+    {
+        return;
+    }
+    while ((size_t)length < size - 1)
     {
         if (((length % 2 == 0) && *s1 != '\0') || (*s2 == '\0' && *s1 != '\0'))
         {
             *d = *s1;
-            printf("%c", *d);
+            // printf("%c", *d);
             s1++;
         }
         else if (*s2 != '\0')
         {
             *d = *s2;
-            printf("%c", *d);
+            // printf("%c", *d);
             s2++;
         }
         d++;

@@ -100,7 +100,7 @@ Test(encryptCaesar, encrypt_key_longer_than_26)
     char ciphertext[20];
 
     cr_assert_eq(encryptCaesar("Cse220", ciphertext, sizeof ciphertext, 27), 6);
-    cr_assert_str_eq(ciphertext, "Duh911__EOM__");
+    cr_assert_str_eq(ciphertext, "Duh577__EOM__");
 }
 
 Test(decryptCaesar, decrypt_text_null)

@@ -153,9 +153,6 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
     int eom_count = 0;
     for (int i = EOM_LEN; i > 0; i--)
     {
-        // printf("\n %c", *ciphertext);
-        // printf(" %c ", EOM[i]);
-
         if (ciphertext[length - i] != EOM[EOM_LEN - i])
         {
             return -1;
@@ -165,43 +162,34 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
     {
         if (*ciphertext >= 'a' && *ciphertext <= 'z')
         {
-
-            int shift = (key + index) % 26;
+            int shift = (-key - index) % 26;
             if (shift < 0)
             {
                 shift += 26;
             }
-            *plaintext = 'a' + ((*ciphertext - 'a' - shift) % 26);
+            *plaintext = 'a' + ((*ciphertext - 'a' + shift) % 26);
             printf("%c", *plaintext);
             plaintext++;
             ciphertext++;
             index++;
         }
-        else if (*plaintext >= 'A' && *plaintext <= 'Z')
+        else if (*ciphertext >= 'A' && *ciphertext <= 'Z')
         {
             if (eom_count > 0)
             {
-                switch (*plaintext)
+                if (*ciphertext == EOM[eom_count - 1])
                 {
-                case 'E':
                     eom_count++;
-                    break;
-                case 'O':
-                    eom_count++;
-                    break;
-                case 'M':
-                    eom_count++;
-                    break;
                 }
             }
             else
             {
-                int shift = (key + index) % 26;
+                int shift = (-key - index) % 26;
                 if (shift < 0)
                 {
                     shift += 26;
                 }
-                *plaintext = 'A' + ((*ciphertext - 'A' - shift) % 26);
+                *plaintext = 'A' + ((*ciphertext - 'A' + shift) % 26);
                 printf("%c", *plaintext);
                 ciphertext++;
                 plaintext++;
@@ -215,7 +203,7 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
             {
                 shift += 10;
             }
-            *plaintext = '0' + ((*ciphertext - '0' - shift) % 10);
+            *plaintext = '0' + ((*ciphertext + '0' - shift) % 10);
             printf("%c", *plaintext);
             plaintext++;
             ciphertext++;
@@ -237,5 +225,6 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
             }
         }
     }
+    *plaintext = '\0';
     return index;
 }
