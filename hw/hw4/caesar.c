@@ -45,6 +45,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
     // (void)size;
     // (void)key;
 
+    // error cases
     if (size < 8)
     {
         return -1;
@@ -55,22 +56,26 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
     }
     int index = 0;
 
+    // loop continues until either plaintext strign ends or max characters of ciphertext is reached
     while (*plaintext != '\0' && (size_t)index < (size - 8))
     {
+        // checks if current plaintext character is a lowercase alphabet
         if (*plaintext >= 'a' && *plaintext <= 'z')
         {
-
+            // uses rules of position aware shift to find shift
             int shift = (key + index) % 26;
             if (shift < 0)
             {
                 shift += 26;
             }
+            // applies shift to current character in relation to the ascii index of 'a'
             *ciphertext = 'a' + ((*plaintext - 'a' + shift) % 26);
-            printf("%c", *ciphertext);
+            // printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
         }
+        // checks if current plaintext character is uppercase alphabet
         else if (*plaintext >= 'A' && *plaintext <= 'Z')
         {
             int shift = (key + index) % 26;
@@ -79,11 +84,12 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
                 shift += 26;
             }
             *ciphertext = 'A' + ((*plaintext - 'A' + shift) % 26);
-            printf("%c", *ciphertext);
+            // printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
         }
+        // checks if current plaintext character is numeric
         else if (*plaintext >= '0' && *plaintext <= '9')
         {
             int shift = (key + 2 * index) % 10;
@@ -92,7 +98,7 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
                 shift += 10;
             }
             *ciphertext = '0' + ((*plaintext - '0' + shift) % 10);
-            printf("%c", *ciphertext);
+            // printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
@@ -100,18 +106,20 @@ int encryptCaesar(const char *plaintext, char *ciphertext, size_t size, int key)
         else
         {
             *ciphertext = *plaintext;
-            printf("%c", *ciphertext);
+            // printf("%c", *ciphertext);
             ciphertext++;
             plaintext++;
             index++;
         }
     }
+    // after string is encrypted, append __EOM__
     for (int i = 0; i < EOM_LEN; i++)
     {
         *ciphertext = EOM[i];
         // printf("%c", *ciphertext);
         ciphertext++;
     }
+    // properly end string
     *ciphertext = '\0';
     return index;
 }
@@ -140,6 +148,7 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
     // (void)size;
     // (void)key;
 
+    // error cases
     if (size < 1)
     {
         return 0;
@@ -151,6 +160,7 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
     int index = 0;
     int length = strgLen(ciphertext);
     int eom_count = 0;
+    // checks if __EOM__ is at the end of the string
     for (int i = EOM_LEN; i > 0; i--)
     {
         if (ciphertext[length - i] != EOM[EOM_LEN - i])
@@ -160,6 +170,7 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
     }
     while (*ciphertext != '\0' && index < (length - EOM_LEN))
     {
+        // checks if the current ciphertext character is a lowercase alphabet
         if (*ciphertext >= 'a' && *ciphertext <= 'z')
         {
             int shift = (-key - index) % 26;
@@ -167,14 +178,17 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
             {
                 shift += 26;
             }
+            // mod 26 used to keep the character within the bounds of [a-z]
             *plaintext = 'a' + ((*ciphertext - 'a' + shift) % 26);
-            printf("%c", *plaintext);
+            // printf("%c", *plaintext);
             plaintext++;
             ciphertext++;
             index++;
         }
+        // checks if current ciphertext character is uppercase alphabet
         else if (*ciphertext >= 'A' && *ciphertext <= 'Z')
         {
+            // checks for if __EOM__ is in the middle of a string, potentially terminating it early
             if (eom_count > 0)
             {
                 if (*ciphertext == EOM[eom_count - 1])
@@ -190,12 +204,13 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
                     shift += 26;
                 }
                 *plaintext = 'A' + ((*ciphertext - 'A' + shift) % 26);
-                printf("%c", *plaintext);
+                // printf("%c", *plaintext);
                 ciphertext++;
                 plaintext++;
                 index++;
             }
         }
+        // chekcs if current ciphertext character is numeric
         else if (*ciphertext >= '0' && *ciphertext <= '9')
         {
             int shift = (key + 2 * index) % 10;
@@ -204,13 +219,14 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
                 shift += 10;
             }
             *plaintext = '0' + ((*ciphertext + '0' - shift) % 10);
-            printf("%c", *plaintext);
+            // printf("%c", *plaintext);
             plaintext++;
             ciphertext++;
             index++;
         }
         else
         {
+            // checks if __EOM__ is in the middle of a string
             if (eom_count > 0 && *ciphertext == '_')
             {
                 eom_count++;
@@ -218,13 +234,14 @@ int decryptCaesar(const char *ciphertext, char *plaintext, size_t size, int key)
             else
             {
                 *plaintext = *ciphertext;
-                printf("%c", *plaintext);
+                // printf("%c", *plaintext);
                 plaintext++;
                 ciphertext++;
                 index++;
             }
         }
     }
+    // properly end string
     *plaintext = '\0';
     return index;
 }

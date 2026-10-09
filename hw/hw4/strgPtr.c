@@ -20,6 +20,7 @@ int strgLen(const char *s)
     /* NULL is an error here and returns -1. */
     // (void)s;
 
+    // error case
     if (s == NULL)
     {
         return -1;
@@ -46,11 +47,8 @@ void strgCopy(const char *source, char *destination, size_t size)
     // (void)destination;
     // (void)size;
 
-    if (source == NULL || destination == NULL)
-    {
-        return;
-    }
-    if (size == 0)
+    // error cases
+    if (source == NULL || destination == NULL || size == 0)
     {
         return;
     }
@@ -60,12 +58,12 @@ void strgCopy(const char *source, char *destination, size_t size)
         return;
     }
     char d;
-
+    // cast i to (size_t) to avoid comparing two int expressions of different signedness
     for (int i = 0; (size_t)i < size - 1; i++)
     {
         *(destination + i) = *(source + i);
-        d = *(destination + i);
-        printf("%c", d);
+        // d = *(destination + i);
+        // printf("%c", d);
     }
 }
 
@@ -89,32 +87,38 @@ void strgChangeCase(char *s)
     {
         char right;
         char left;
+        // checks if the current character is the first character of the string
         if (i < 1)
         {
             right = s[i + 1];
+            // checks if right character is alphabetic (both cases) and the current letter is alphabetic
             if (((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
             {
+                // use XOR to sign sign of the letter
                 s[i] = s[i] ^ 32;
-                printf(" %c", s[i]);
+                // printf(" %c", s[i]);
             }
-            else
-            {
-                printf("%c", s[i]);
-            }
+            // else
+            // {
+            //   printf("%c", s[i]);
+            // }
         }
+        // checks if current character is the last character of the string
         else if (i == length - 1)
         {
             left = s[i - 1];
+            // checks if left character is alphabetic (both cases) and if the current character is alphabetic
             if (((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z')) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
             {
                 s[i] = s[i] ^ 32;
-                printf(" %c", s[i]);
+                // printf(" %c", s[i]);
             }
-            else
-            {
-                printf("%c", s[i]);
-            }
+            // else
+            // {
+            //     printf("%c", s[i]);
+            // }
         }
+        // if current character is in the middle of the string check for both left and right
         else
         {
             right = s[i + 1];
@@ -122,12 +126,12 @@ void strgChangeCase(char *s)
             if ((((right >= 'a' && right <= 'z') || (right >= 'A' && right <= 'Z')) && ((left >= 'a' && left <= 'z') || (left >= 'A' && left <= 'Z'))) && ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z')))
             {
                 s[i] = s[i] ^ 32;
-                printf("%c", s[i]);
+                // printf("%c", s[i]);
             }
-            else
-            {
-                printf("%c", s[i]);
-            }
+            // else
+            // {
+            //     printf("%c", s[i]);
+            // }
         }
     }
 }
@@ -144,10 +148,12 @@ int strgDiff(const char *s1, const char *s2)
     // (void)s1;
     // (void)s2;
     int index = 0;
+    // error cases
     if (s1 == NULL || s2 == NULL)
     {
         return -2;
     }
+    // while both strings are not empty check difference
     while (*s1 != '\0' && *s2 != '\0')
     {
         if (*s1 != *s2)
@@ -158,6 +164,7 @@ int strgDiff(const char *s1, const char *s2)
         s1++;
         s2++;
     }
+    // if both strings are identical after the check return -1
     if (*s1 == '\0' && *s2 == '\0')
     {
         return -1;
@@ -181,12 +188,14 @@ void strgInterleave(const char *s1, const char *s2, char *d, size_t size)
     // (void)d;
     // (void)size;
     int length = 0;
+    // error cases
     if (s1 == NULL || s2 == NULL || d == NULL || size == 0)
     {
         return;
     }
     while ((size_t)length < size - 1)
     {
+        // if neither string is empty and the current character has an even index OR s2 is empty, copy from s1
         if (((length % 2 == 0) && *s1 != '\0') || (*s2 == '\0' && *s1 != '\0'))
         {
             *d = *s1;
@@ -202,6 +211,7 @@ void strgInterleave(const char *s1, const char *s2, char *d, size_t size)
         d++;
         length++;
     }
+    // properly end string to avoid trash
     *d = '\0';
 }
 
@@ -218,9 +228,12 @@ void strgReverseLetters(char *s)
     int length = strgLen(s) - 1;
     for (int i = 0; i < length; i++)
     {
+        // first_char is 1 if the current character is alphabetic (both cases)
         int first_char = ((s[i] >= 'a' && s[i] <= 'z') || (s[i] >= 'A' && s[i] <= 'Z'));
+        // second_char is 1 is the next character is alphabetic (both cases)
         int second_char = ((s[(length)] >= 'a' && s[(length)] <= 'z') || (s[(length)] >= 'A' && s[(length)] <= 'Z'));
 
+        // if both first_char and second-char are alphabetic, they swap places
         if (first_char && second_char)
         {
             char temp = s[i];
@@ -229,8 +242,8 @@ void strgReverseLetters(char *s)
         }
         length--;
     }
-    for (int i = 0; i < length; i++)
-    {
-        printf("%c", s[i]);
-    }
+    // for (int i = 0; i < length; i++)
+    // {
+    //     printf("%c", s[i]);
+    // }
 }

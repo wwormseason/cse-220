@@ -8,7 +8,7 @@ int main()
   // printf("%d", strgLen("\0"));
   char destination[40];
   char s[] = "kinginyellow";
-  //  strgCopy("Computer Science", destination, 5);
+  strgCopy("Computer Science", destination, 5);
   // strgChangeCase(s);
   //  printf("%d", strgDiff("abc", "abcd"));
   //  strgReverseLetters(s);
