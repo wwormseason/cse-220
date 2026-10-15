@@ -66,6 +66,7 @@ int SparseMatrix(const int D[2], const int M[D[0]][D[1]],
           *(*(S + 0) + k) = i;
           *(*(S + 1) + k) = j;
           *(*(S + 2) + k) = p;
+          k++;
         }
       }
     }
