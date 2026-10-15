@@ -86,3 +86,184 @@ Test(DiagonalSum, sums_a_square_matrix)
  *
  * printMatrix("A after the call", 2, 3, A) prints a matrix while you debug.
  */
+
+Test(SparseMatrix, sparse_non_square_entry)
+{
+    const int D[2] = {2, 5};
+    const int M[2][5] = {{0, 0, 3, 0, 0}, {0, 7, 0, 0, 1}};
+    int S[3][5] = {{0}};
+    int expected[3][5] = {{0, 1, 1, 0, 0}, {2, 1, 4, 0, 0}, {3, 7, 1, 0, 0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 3);
+    cr_assert(matricesEqual(3, 5, S, expected));
+}
+
+Test(SparseMatrix, sparse_square_entry)
+{
+    const int D[2] = {3, 3};
+    const int M[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+    int S[3][3] = {{0}};
+    int expected[3][3] = {{0, 0, 0}, {0, 0, 0}, {0, 0, 0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 0);
+    cr_assert(matricesEqual(3, 3, S, expected));
+}
+
+Test(SparseMatrix, sparse_single_entry)
+{
+    const int D[2] = {1, 1};
+    const int M[1][1] = {{5}};
+    int S[3][1] = {{0}};
+    int expected[3][1] = {{0}, {0}, {5}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 1);
+    cr_assert(matricesEqual(3, 1, S, expected));
+}
+
+Test(SparseMatrix, sparse_extremely_rectangular)
+{
+    const int D[2] = {1, 9};
+    const int M[9][1] = {{5}, {6}, {7}, {8}, {9}, {10}, {11}, {12}, {13}};
+    int S[3][9] = {{0}};
+    int expected[3][9] = {{0, 0, 0, 0, 0, 0, 0, 0, 0}, {0, 1, 2, 3, 4, 5, 6, 7, 8}, {5, 6, 7, 8, 9, 10, 11, 12, 13}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 9);
+    cr_assert(matricesEqual(3, 9, S, expected));
+}
+
+Test(SparseMatrix, sparse_whoa_i_spilled_my_numbers)
+{
+    const int D[2] = {2, 3};
+    const int M[2][3] = {{0, 5, 0}, {0, 0, 8}};
+    int S[3][3] = {{0}};
+    int expected[3][3] = {{0, 1, 0}, {1, 2, 0}, {5, 8, 0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 2);
+    cr_assert(matricesEqual(3, 3, S, expected));
+}
+
+Test(SparseMatrix, sparse_diagonally_dominant)
+{
+    const int D[2] = {3, 3};
+    const int M[3][3] = {{1, 0, 0}, {0, 2, 0}, {0, 0, 3}};
+    int S[3][3] = {{0}};
+    int expected[3][3] = {{0, 1, 2}, {0, 1, 2}, {1, 2, 3}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 3);
+    cr_assert(matricesEqual(3, 3, S, expected));
+}
+
+Test(SparseMatrix, sparse_non_sparse_two_by_three)
+{
+    const int D[2] = {2, 3};
+    const int M[2][3] = {{1, 2, 0}, {3, 4, 0}};
+    int S[3][3] = {{0}};
+    int expected[3][3] = {{0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), -1);
+    cr_assert(matricesEqual(3, 3, S, expected));
+}
+
+Test(SparseMatrix, sparse_column_dominant)
+{
+    const int D[2] = {2, 4};
+    const int M[2][4] = {{0, 0, 9, 0}, {7, 0, 0, 0}};
+    int S[3][4] = {{0}};
+    int expected[3][4] = {{0, 1, 0, 0}, {2, 0, 0, 0}, {9, 7, 0, 0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 2);
+    cr_assert(matricesEqual(3, 4, S, expected));
+}
+
+Test(SparseMatrix, sparse_large_negative_value)
+{
+    const int D[2] = {2, 2};
+    const int M[2][2] = {{-999, 0}, {0, -42}};
+    int S[3][2] = {{0}};
+    int expected[3][2] = {{0, 1}, {0, 1}, {-999, -42}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 2);
+    cr_assert(matricesEqual(3, 2, S, expected));
+}
+
+Test(SparseMatrix, sparse_also_extremely_rectangular)
+{
+    const int D[2] = {5, 1};
+    const int M[5][1] = {{0}, {3}, {0}, {6}, {9}};
+    int S[3][5] = {{0}};
+    int expected[3][5] = {{1, 3, 4, 0, 0}, {0, 0, 0, 0, 0}, {3, 6, 9, 0, 0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), 3);
+    cr_assert(matricesEqual(3, 5, S, expected));
+}
+
+Test(SparseMatrix, sparse_all_ones)
+{
+    const int D[2] = {3, 3};
+    const int M[3][3] = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+    int S[3][3] = {{0}};
+    int expected[3][3] = {{0}};
+
+    cr_assert_eq(SparseMatrix(D, M, S), -1);
+    cr_assert(matricesEqual(3, 3, S, expected));
+}
+
+Test(HadamardProduct, hadamard_two_squares_two)
+{
+    const int D[6] = {2, 2, 2, 2, 3, 3};
+    const int M[2][2] = {{1, 2}, {5, 6}};
+    const int N[2][2] = {{3, 4}, {7, 8}};
+    int A[3][3] = {{0}};
+    int expected[3][3] = {{3, 8, 0}, {35, 48, 0}, {0, 0, 0}};
+
+    cr_assert_eq(HadamardProduct(D, M, N, A), 2);
+    cr_assert(matricesEqual(3, 3, A, expected));
+}
+
+Test(HadamardProduct, hadamard_two_rectangles_two)
+{
+    const int D[6] = {2, 3, 2, 3, 3, 3};
+    const int M[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    const int N[2][3] = {{4, 5, 6}, {7, 8, 9}};
+    int A[3][3] = {{0}};
+    int expected[3][3] = {{4, 10, 18}, {28, 40, 54}, {0, 0, 0}};
+
+    cr_assert_eq(HadamardProduct(D, M, N, A), 2);
+    cr_assert(matricesEqual(3, 3, A, expected));
+}
+
+Test(HadamardProduct, hadamard_differently_sized_squares_neg_one)
+{
+    const int D[6] = {3, 3, 2, 2, 3, 3};
+    const int M[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    const int N[2][2] = {{2, 5}, {1, 4}};
+    int A[3][3] = {{0}};
+    int expected[3][3] = {{2, 10, 0}, {4, 20, 0}, {0, 0, 0}};
+
+    cr_assert_eq(HadamardProduct(D, M, N, A), -1);
+    cr_assert(matricesEqual(3, 3, A, expected));
+}
+
+Test(HadamardProduct, hadamard_more_differently_sized_squares_neg_one)
+{
+    const int D[6] = {3, 3, 2, 2, 2, 2};
+    const int M[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    const int N[2][2] = {{2, 5}, {1, 4}};
+    int A[2][2] = {{0}};
+    int expected[2][2] = {{2, 10}, {4, 20}};
+
+    cr_assert_eq(HadamardProduct(D, M, N, A), -1);
+    cr_assert(matricesEqual(2, 2, A, expected));
+}
+
+Test(HadamardProduct, hadamard_two_rectangles_neg_three)
+{
+    const int D[6] = {2, 3, 2, 3, 1, 2};
+    const int M[2][3] = {{1, 2, 3}, {4, 5, 6}};
+    const int N[2][3] = {{2, 3, 4}, {5, 6, 7}};
+    int A[1][2] = {{0}};
+    int expected[1][2] = {{2, 6}};
+
+    cr_assert_eq(HadamardProduct(D, M, N, A), -3);
+    cr_assert(matricesEqual(1, 2, A, expected));
+}
