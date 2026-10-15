@@ -130,7 +130,7 @@ int HadamardProduct(const int D[6], const int M[D[0]][D[1]], const int N[D[2]][D
   else
   {
     // not compatible
-    if (D[0] >= D[4] && D[1] >= D[5])
+    if (D[4] >= minRows && D[5] >= minCols)
     {
       // A can store entire result
       return -1;
