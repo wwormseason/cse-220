@@ -64,11 +64,11 @@ int SparseMatrix(const int D[2], const int M[D[0]][D[1]],
         {
           *(*(S + 0) + count) = i;
           *(*(S + 1) + count) = j;
-          *(*(S + 2) + count++) = p;
+          *(*(S + 2) + count) = p;
         }
       }
-      return count;
     }
+    return count;
   }
 }
 
