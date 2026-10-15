@@ -3,8 +3,8 @@
 
 int main()
 {
-  const int D[2] = {4, 4};
-  const int M[4][4] = {{2, 3, 0, 5}, {3, 0, 3, 1}, {4, 0, 3, 0}, {0, 0, 6, 0}};
+  const int D[2] = {4, 2};
+  const int M[4][2] = {{0, 4}, {0, 5}, {0, 0}, {2, 0}};
   int S[3][4] = {{0}};
   printf("\n %d", SparseMatrix(D, M, S));
 
