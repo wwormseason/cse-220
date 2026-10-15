@@ -32,7 +32,7 @@ int HadamardProduct(const int D[6], const int M[D[0]][D[1]], const int N[D[2]][D
       // A is exactly the size of the result
       return 1;
     }
-    else if (D[0] < D[4] && D[1] <= D[5])
+    else if (D[0] <= D[4] && D[1] <= D[5])
     {
       // A is larger than M and N in both dimensions
       return 2;
@@ -46,7 +46,7 @@ int HadamardProduct(const int D[6], const int M[D[0]][D[1]], const int N[D[2]][D
   else
   {
     // not compatible
-    if (D[0] >= D[4] && D[1] >= D[5])
+    if (D[4] >= minRows && D[5] >= minCols)
     {
       // A can store entire result
       return -1;
