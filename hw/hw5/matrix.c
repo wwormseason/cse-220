@@ -57,7 +57,7 @@ int SparseMatrix(const int D[2], const int M[D[0]][D[1]],
     {
       for (int j = 0; j < D[1]; j++)
       {
-                *(*S + i) + j) = 0;
+        *(*(S + i) + j) = 0;
       }
     }
     return -1;
@@ -173,7 +173,7 @@ int Multiplication(const int D[6], const int M[D[0]][D[1]],
       int sum = 0;
       for (int k = 0; k < kLimit; k++)
       {
-                sum += *(*(M + i) + k)) * (*(*(N + k) + j);
+        sum += *(*(M + i) + k) * *(*(N + k) + j);
       }
       *(*(A + i) + j) = sum;
     }
@@ -295,5 +295,5 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
   else
   {
     return -1;
-  }
+  } // bel
 }
