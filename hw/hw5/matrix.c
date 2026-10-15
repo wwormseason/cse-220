@@ -55,6 +55,7 @@ int SparseMatrix(const int D[2], const int M[D[0]][D[1]],
   }
   else
   {
+    int k = 0;
     for (int i = 0; i < D[0]; i++)
     {
       for (int j = 0; j < D[1]; j++)
@@ -62,9 +63,9 @@ int SparseMatrix(const int D[2], const int M[D[0]][D[1]],
         p = *(*(M + i) + j);
         if (p != 0)
         {
-          *(*(S + 0) + count) = i;
-          *(*(S + 1) + count) = j;
-          *(*(S + 2) + count) = p;
+          *(*(S + 0) + k) = i;
+          *(*(S + 1) + k) = j;
+          *(*(S + 2) + k) = p;
         }
       }
     }
