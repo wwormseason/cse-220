@@ -194,7 +194,7 @@ int Multiplication(const int D[6], const int M[D[0]][D[1]],
       // A is exactly size of result
       return 1;
     }
-    else if (D[4] > D[0] && D[5] > D[3])
+    else if (D[4] >= D[0] && D[5] >= D[3])
     {
       // A is greater than result in both dimensions
       return 2;
@@ -219,8 +219,6 @@ int Multiplication(const int D[6], const int M[D[0]][D[1]],
       return -2;
     }
   }
-
-  return 0;
 }
 
 int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
