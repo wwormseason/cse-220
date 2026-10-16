@@ -445,12 +445,46 @@ Test(Multiplication, mult_a_is_really_really_big_two)
 
 Test(Multiplication, mult_negative_numbers_neg_one)
 {
-    const int D[6] = {2, 4, 4, 4, 4, 4};
+    const int D[6] = {4, 2, 4, 4, 4, 4};
     const int M[4][2] = {{-1, -3}, {3, 7}, {-6, 2}, {-4, 5}};
     const int N[4][4] = {{1, -2, 3, 0}, {-4, 5, -6, 3}, {-7, -8, -9, -2}, {0, 1, 2, 3}};
     int A[4][4] = {{0}};
-    int expected[4][4] = {{11, -13, 15, -9}, {-25, 29, -33, 21}, {-14, 22, -30, 6}, {24, -33, 42, -15}};
+    int expected[4][4] = {{11, -13, 15, -9}, {-25, 29, -33, 21}, {-14, 22, -30, 6}, {-24, 33, -42, 15}};
 
     cr_assert_eq(Multiplication(D, M, N, A), -1);
     cr_assert(matricesEqual(4, 4, A, expected));
+}
+
+Test(DiagonalSum, diagsum_sums_a_square_matrix_two)
+{
+    const int D[4] = {3, 3, 5, 4};
+    const int A[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    int DS[5][4] = {{0}};
+    int expected[5][4] = {{15, 15, 0, 0}, {12, 15, 18, 0}, {6, 0, 0, 0}, {15, 0, 0, 0}, {24, 0, 0, 0}};
+
+    cr_assert_eq(DiagonalSum(D, A, DS), 2);
+    cr_assert(matricesEqual(5, 4, DS, expected));
+}
+
+Test(DiagonalSum, diagsum_sums_a_smaller_square_matrix_two)
+{
+    const int D[4] = {2, 2, 5, 4};
+    const int A[2][2] = {{2, 4}, {6, 8}};
+    int DS[5][4] = {{0}};
+    int expected[5][4] = {{10, 10, 0, 0}, {8, 12, 0, 0}, {6, 0, 0, 0}, {14, 0, 0, 0}, {0, 0, 0, 0}};
+
+    cr_assert_eq(DiagonalSum(D, A, DS), 2);
+    cr_assert(matricesEqual(5, 4, DS, expected));
+}
+
+Test(DiagonalSum, diagsum_sums_a_larger_square_matrix_neg_one)
+{
+    const int D[4] = {4, 4, 2, 2};
+    const int A[4][4] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 1, 2, 3}, {4, 5, 6, 7}};
+    int DS[2][2] = {{0}};
+    int expected[2][2] = {{16, 16}, {19, 14}};
+
+    cr_assert_eq(DiagonalSum(D, A, DS), -1);
+    printMatrix("ds: ", 2, 2, DS);
+    cr_assert(matricesEqual(2, 2, DS, expected));
 }

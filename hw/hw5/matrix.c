@@ -16,6 +16,7 @@
  * the starter kit compiles with -Werror before you have written any code.
  */
 #include "matrix.h"
+#include <stdio.h>
 
 int SparseMatrix(const int D[2], const int M[D[0]][D[1]],
                  int S[3][(D[1] > D[0] ? D[1] : D[0])])
@@ -180,7 +181,7 @@ int Multiplication(const int D[6], const int M[D[0]][D[1]],
       int sum = 0;
       for (int k = 0; k < kLimit; k++)
       {
-        sum += *(*(M + i) + k) * *(*(N + k) + j);
+        sum += (*(*(M + i) + k)) * (*(*(N + k) + j));
       }
       *(*(A + i) + j) = sum;
     }
@@ -219,8 +220,6 @@ int Multiplication(const int D[6], const int M[D[0]][D[1]],
       return -2;
     }
   }
-
-  return 0;
 }
 
 int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
@@ -268,14 +267,17 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
   }
 
   // sum of rows
-  for (int i = 0; i < D[0]; i++)
+  if (D[2] > 2)
   {
-    int rowSum = 0;
-    for (int j = 0; j < D[1]; j++)
+    for (int i = 0; i < D[0]; i++)
     {
-      rowSum += *(*(A + i) + j);
+      int rowSum = 0;
+      for (int j = 0; j < D[1]; j++)
+      {
+        rowSum += *(*(A + i) + j);
+      }
+      *(*(DS + i + 2)) = rowSum;
     }
-    *(*(DS + i + 2)) = rowSum;
   }
 
   // sum of columns
@@ -294,7 +296,7 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
     // DS has exactly D[1] + 2 rows and D[0] or 2 columns
     return 1;
   }
-  else if (D[2] > D[1] + 2 && (D[3] > D[0] || D[3] > 2))
+  else if (D[2] >= D[1] + 2 && (D[3] >= D[0] || D[3] >= 2))
   {
     // DS has greater than D[1] + 2 rows and greater than D[0] or 2 columns
     return 2;
