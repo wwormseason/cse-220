@@ -195,7 +195,7 @@ int Multiplication(const int D[6], const int M[D[0]][D[1]],
       // A is exactly size of result
       return 1;
     }
-    else if (D[4] > D[0] && D[5] > D[3])
+    else if (D[4] >= D[0] && D[5] >= D[3])
     {
       // A is greater than result in both dimensions
       return 2;
