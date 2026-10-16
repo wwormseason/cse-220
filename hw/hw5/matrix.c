@@ -245,58 +245,63 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
   // (void)DS;
 
   int minLimit = D[0] <= D[1] ? D[0] : D[1];
-  int square = (D[0] == D[1]);
+  int minRows = D[0] < D[2] ? D[0] : D[2];
+  int minCols = D[1] < D[3] ? D[1] : D[3];
+  int square = D[0] == D[1];
 
   // diagonal
   int diagonalSum = 0;
-  for (int i = 0; i < D[0] && i < D[1]; i++)
+  for (int i = 0; i < minLimit; i++)
   {
     diagonalSum += *(*(A + i) + i);
   }
   *(*(DS)) = diagonalSum;
 
   // anti diagonal sum
+  int antiDiagonalSum = 0;
   if (square)
   {
-    int antiDiagonalSum = 0;
-    for (int i = minLimit - 1; i >= 0; i--)
+    for (int i = 0; i < minLimit; i++)
     {
-      antiDiagonalSum += *(*(A + i) + i);
+      antiDiagonalSum += *(*(A + i) + minLimit - 1 - i);
     }
-    *(*(DS) + 1) = antiDiagonalSum;
+  }
+  *(*(DS) + 1) = antiDiagonalSum;
+
+  // sum of columns
+  for (int j = 0; j < minCols; j++)
+  {
+    int colSum = 0;
+    for (int i = 0; i < minRows; i++)
+    {
+      colSum += *(*(A + i) + j);
+    }
+    if (D[2] > 1 && j < D[3])
+    {
+      *(*(DS + 1) + j) = colSum;
+    }
   }
 
   // sum of rows
-  if (D[2] > 2)
+  for (int i = 0; i < minRows; i++)
   {
-    for (int i = 0; i < D[0]; i++)
+    int rowSum = 0;
+    for (int j = 0; j < minCols; j++)
     {
-      int rowSum = 0;
-      for (int j = 0; j < D[1]; j++)
-      {
-        rowSum += *(*(A + i) + j);
-      }
+      rowSum += *(*(A + i) + j);
+    }
+    if ((i + 2) < D[2] && D[3] > 0)
+    {
       *(*(DS + i + 2)) = rowSum;
     }
   }
 
-  // sum of columns
-  for (int i = 0; i < D[0]; i++)
-  {
-    int colSum = 0;
-    for (int j = 0; j < D[1]; j++)
-    {
-      colSum += *(*(A + j) + i);
-    }
-    *(*(DS + 1) + i) = colSum;
-  }
-
-  if (D[2] == D[1] + 2 && (D[3] == D[0] || D[3] == 2))
+  if (D[2] == (D[0] + 2) && (D[1] == D[3] || D[3] == 2))
   {
     // DS has exactly D[1] + 2 rows and D[0] or 2 columns
     return 1;
   }
-  else if (D[2] >= D[1] + 2 && (D[3] >= D[0] || D[3] >= 2))
+  else if (D[2] >= (D[0] + 2) && (D[3] >= D[1] || D[3] >= 2))
   {
     // DS has greater than D[1] + 2 rows and greater than D[0] or 2 columns
     return 2;
@@ -304,5 +309,5 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
   else
   {
     return -1;
-  } // bel
+  }
 }

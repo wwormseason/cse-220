@@ -1,8 +1,8 @@
 /*
  * CSE 220 Homework 5 tests.
  *
- * Name:
- * SBU ID:
+ * Name: Yifan Zhang
+ * SBU ID: 116980467
  *
  * A few sample tests are given so you can see how Criterion and the provided
  * helpers are used. They fail until you implement the functions, which is
@@ -455,7 +455,7 @@ Test(Multiplication, mult_negative_numbers_neg_one)
     cr_assert(matricesEqual(4, 4, A, expected));
 }
 
-Test(DiagonalSum, diagsum_sums_a_square_matrix_two)
+Test(DiagonalSum, dia_sums_a_square_matrix_two)
 {
     const int D[4] = {3, 3, 5, 4};
     const int A[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
@@ -466,7 +466,7 @@ Test(DiagonalSum, diagsum_sums_a_square_matrix_two)
     cr_assert(matricesEqual(5, 4, DS, expected));
 }
 
-Test(DiagonalSum, diagsum_sums_a_smaller_square_matrix_two)
+Test(DiagonalSum, dia_sums_a_smaller_square_matrix_two)
 {
     const int D[4] = {2, 2, 5, 4};
     const int A[2][2] = {{2, 4}, {6, 8}};
@@ -477,7 +477,7 @@ Test(DiagonalSum, diagsum_sums_a_smaller_square_matrix_two)
     cr_assert(matricesEqual(5, 4, DS, expected));
 }
 
-Test(DiagonalSum, diagsum_sums_a_larger_square_matrix_neg_one)
+Test(DiagonalSum, dia_sums_a_larger_square_matrix_neg_one)
 {
     const int D[4] = {4, 4, 2, 2};
     const int A[4][4] = {{1, 2, 3, 4}, {5, 6, 7, 8}, {9, 1, 2, 3}, {4, 5, 6, 7}};
@@ -485,6 +485,42 @@ Test(DiagonalSum, diagsum_sums_a_larger_square_matrix_neg_one)
     int expected[2][2] = {{16, 16}, {19, 14}};
 
     cr_assert_eq(DiagonalSum(D, A, DS), -1);
-    printMatrix("ds: ", 2, 2, DS);
+    printMatrix("ds:", 2, 2, DS);
+    printMatrix("ex:", 2, 2, expected);
     cr_assert(matricesEqual(2, 2, DS, expected));
+}
+
+Test(DiagonalSum, dia_sums_a_rectangle_matrix_one)
+{
+    const int D[4] = {2, 3, 4, 3};
+    const int A[2][3] = {{3, 5, 7}, {2, 4, 6}};
+    int DS[4][3] = {{0}};
+    int expected[4][3] = {{7, 0, 0}, {5, 9, 13}, {15, 0, 0}, {12, 0, 0}};
+
+    cr_assert_eq(DiagonalSum(D, A, DS), 1);
+    cr_assert(matricesEqual(4, 3, DS, expected));
+}
+
+Test(DiagonalSum, dia_sums_a_larger_rectangle_matrix_neg_one)
+{
+    const int D[4] = {4, 3, 2, 2};
+    const int A[4][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {1, 2, 3}};
+    int DS[2][2] = {{0}};
+    int expectation[2][2] = {{15, 0}, {13, 17}};
+
+    cr_assert_eq(DiagonalSum(D, A, DS), -1);
+    printMatrix("ds-1:", 2, 2, DS);
+    printMatrix("ex-1: ", 2, 2, expectation);
+    cr_assert(matricesEqual(2, 2, DS, expectation));
+}
+
+Test(DiagonalSum, dia_sums_another_square_matrix_one)
+{
+    const int D[4] = {3, 3, 5, 3};
+    const int A[3][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}};
+    int DS[5][3] = {{0}};
+    int expected[5][3] = {{15, 15, 0}, {12, 15, 18}, {6, 0, 0}, {15, 0, 0}, {24, 0, 0}};
+
+    cr_assert_eq(DiagonalSum(D, A, DS), 1);
+    cr_assert(matricesEqual(5, 3, DS, expected));
 }
