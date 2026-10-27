@@ -16,7 +16,6 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
   *(*(DS)) = diagonalSum;
 
   // anti diagonal sum
-
   if (square)
   {
     int antiDiagonalSum = 0;
@@ -35,7 +34,7 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
     // printf("Column %d\n", j);
     for (int i = 0; i < D[0]; i++)
     {
-      printf("(%d, %d) %d\n", i, j, *(*(A + i) + j));
+      // printf("(%d, %d) %d\n", i, j, *(*(A + i) + j));
       colSum += *(*(A + i) + j);
     }
     // printf("Column %d Sum: %d\n", j, colSum);
@@ -64,12 +63,12 @@ int DiagonalSum(const int D[4], const int A[D[0]][D[1]], int DS[D[2]][D[3]])
     printf("}");
   }
 
-  if (D[2] == D[1] + 2 && (D[3] == D[0] || D[3] == 2))
+  if (D[2] == D[0] + 2 && (D[1] == D[3] || D[3] == 2))
   {
     // DS has exactly D[1] + 2 rows and D[0] or 2 columns
     return 1;
   }
-  else if (D[2] > D[1] + 2 && (D[3] > D[0] || D[3] > 2))
+  else if (D[2] >= D[0] + 2 && (D[3] >= D[1] || D[3] >= 2))
   {
     // DS has greater than D[1] + 2 rows and greater than D[0] or 2 columns
     return 2;

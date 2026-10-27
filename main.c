@@ -1,12 +1,9 @@
 #include <stdio.h>
-char *c[] = {"Midterm", "MCQ", "TEST", "QUIZ"};
-char **cp[] = {c + 3, c + 2, c + 1, c};
-char ***cpp = cp;
-int main()
+
+int main(int argc, char **argv)
 {
-  printf("%s ", **++cpp);       // T
-  printf("%s ", *--*++cpp + 3); //
-  printf("%s ", *cpp[-2] + 3);
-  printf("%s ", cpp[-1][-1] + 1);
-  return 0;
+  int test = 0x6578;
+  int *ptr = &test;
+  printf("0x%x\n", *((char *)ptr));
+  printf("0x%x\n", *((char *)ptr + 1));
 }
