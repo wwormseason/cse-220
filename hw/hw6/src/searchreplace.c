@@ -47,8 +47,9 @@ int main(int argc, char *argv[])
 
     int sCount, rCount, lCount, wCount, first, last;
     int optRes;
-    char *sArg, *rArg, *inFile, *outFile;
-    FILE *fin, *fout;
+    char *sArg, *rArg;
+    FILE *fin;
+    FILE *fout;
     int opt;
     while ((opt = getopt(argc, argv, "s:r:l:w") != -1))
     {
@@ -58,12 +59,10 @@ int main(int argc, char *argv[])
             sCount++;
             if (optarg)
             {
-                if (*optarg == '-')
-                {
+                if (*optarg == '-') {
                     optRes = 1;
                 }
-                else
-                {
+                else {
                     sArg = optarg;
                 }
             }
@@ -72,43 +71,36 @@ int main(int argc, char *argv[])
             rCount++;
             if (optarg)
             {
-                if (*optarg == '-')
-                {
+                if (*optarg == '-') {
                     optRes = 2;
                 }
-                else
-                {
+                else {
                     rArg = optarg;
                 }
             }
             break;
         case 'l':
             lCount++;
-            char *lineNums = strtok(optarg, ",");
-            if (lineNums)
-            {
-                first = strtol(lineNums, NULL, 0);
-                last = strtol(strtok(NULL, ","), NULL, 0);
-                if (!first || first < 1 || !last || last < 1 || first > last)
-                {
-                    optRes = 3;
-                }
-            }
+            if (optarg != NULL && *optarg != '\0') {
+                char *lineNums = strtok(optarg, ",");
+                if (lineNums) {
+                    first = strtol(lineNums, NULL, 0);
+                    last = strtol(strtok(NULL, ","), NULL, 0);
+                    if (!first || first < 1 || !last || last < 1 || first > last) {
+                        optRes = 3;
+                    }   
+                } 
+            } 
             break;
         case 'w':
             wCount++;
             break;
         case '?':
-            if (optopt == 's')
-            {
+            if (optopt == 's') {
                 optRes = 1;
-            }
-            else if (optopt == 'r')
-            {
+            } else if (optopt == 'r') {
                 optRes = 2;
-            }
-            else if (optopt == 'l')
-            {
+            } else if (optopt == 'l') {
                 optRes = 3;
             }
             break;
@@ -116,37 +108,22 @@ int main(int argc, char *argv[])
             break;
         }
     }
-
-    if (argc < 7)
-    {
+    int textOut;
+    if (argc < 7) {
         return MISSING_ARGUMENT;
-    }
-    else if (sCount > 1 || rCount > 1 || lCount > 1 || wCount > 1)
-    {
+    } else if (sCount > 1 || rCount > 1 || lCount > 1 || wCount > 1) {
         return DUPLICATE_ARGUMENT;
-    }
-    else if ((fin = fopen(argv[argc - 2], "r+")) == NULL)
-    {
+    } else if ((fin = fopen(argv[argc - 2], "r+")) == NULL) {
         return INPUT_FILE_MISSING;
-    }
-    else if ((fout = fopen(argv[argc - 1], "w")) == NULL)
-    {
+    } else if ((textOut = access(argv[argc - 1], W_OK)) == -1) {
         return OUTPUT_FILE_UNWRITABLE;
-    }
-    else if (sCount == 0 || optRes == 1)
-    {
+    } else if (sCount == 0 || optRes == 1) {
         return S_ARGUMENT_MISSING;
-    }
-    else if (rCount == 0 || optRes == 2)
-    {
+    } else if (rCount == 0 || optRes == 2) {
         return R_ARGUMENT_MISSING;
-    }
-    else if (optRes == 3)
-    {
+    } else if (optRes == 3) {
         return L_ARGUMENT_INVALID;
-    }
-    else
-    {
+    } else {
         // wildcard
     }
 
@@ -166,26 +143,23 @@ int main(int argc, char *argv[])
     FILE *tmpptr;
     tmpptr = tmpfile();
     int currentLine = 1;
-    while (fgets(line, sizeof(fin), fin) != NULL)
-    {
+    fout = fopen(argv[argc - 1], "w");
+    while (fgets(line, sizeof(line), fin) != NULL) {
         fputs(line, tmpptr);
-        if (currentLine <= first && currentLine >= last)
-        {
-            while (fscanf(tmpptr, "%s", read) == 1)
-            {
-                if (strcmp(read, sArg) == 0)
-                {
+        if (currentLine >= first && currentLine <= last) {
+            while (fscanf(tmpptr, "%s", read) == 1) {
+                if (strcmp(read, sArg) == 0) {
                     fprintf(fout, "%s", rArg);
-                }
-                else
-                {
+                } else {
                     fprintf(fout, "%s", read);
                 }
             }
         }
+        rewind(tmpptr);
         currentLine++;
     }
-
+   
+    
     /*
      * TODO: Part 3, wildcard search and replace.
      *

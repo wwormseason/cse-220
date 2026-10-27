@@ -35,7 +35,7 @@ int main()
   Node *head = NULL;
   int choice;
 
-  for (;;)
+  for (;;) //infinite loop
   {
     printf("Student Records\n");
     printf("1. Add Student\n");
@@ -49,7 +49,11 @@ int main()
     if (!read_int("Choose an option: ", &choice))
     {
       puts("\nInput ended.");
-      break;
+      break; // or return to manually end the loop
     }
   }
+
+  // used switch case for menu (we learned this in 114)
+
+
 }
