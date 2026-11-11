@@ -12,11 +12,13 @@
  * the three test files under tests/.
  */
 #include "searchreplace.h"
-#include <string.h>
-#include <stdio.h>
 
-int main(int argc, char *argv[])
-{
+#include <dirent.h>
+#include <libgen.h>
+int out_writable(const char* fp);
+char* sreplace(char* og, char* search, char* replace);
+
+int main(int argc, char* argv[]) {
     /*
      * TODO: Part 1, validate the command line arguments.
      *
@@ -44,78 +46,112 @@ int main(int argc, char *argv[])
      * When you return an error code, leave the output file alone. Do not
      * create it and do not truncate it.
      */
-
-    int sCount, rCount, lCount, wCount, first, last;
-    int optRes;
-    char *sArg, *rArg;
-    FILE *fin;
-    FILE *fout;
-    int opt;
-    while ((opt = getopt(argc, argv, "s:r:l:w") != -1))
-    {
-        switch (opt)
-        {
-        case 's':
-            sCount++;
-            if (optarg)
-            {
-                if (*optarg == '-') {
-                    optRes = 1;
-                }
-                else {
+    int sCount = 0, rCount = 0, lCount = 0, wCount = 0;
+    int first = 0, last = 0;
+    int optRes = 0;
+    char *sArg = NULL, *rArg = NULL, *wArg = NULL;
+    FILE* fin = NULL;
+    FILE* fout = NULL;
+    int pre = 0, post = 0;
+    int opt = 0;
+    while ((opt = getopt(argc, argv, "s:r:l:w")) != -1) {
+        switch (opt) {
+            case 's':
+                sCount++;
+                if (optarg && *optarg != '-') {
                     sArg = optarg;
+                } else {
+                    optRes = (optRes == 0) ? 1 : optRes;
                 }
-            }
-            break;
-        case 'r':
-            rCount++;
-            if (optarg)
-            {
-                if (*optarg == '-') {
-                    optRes = 2;
-                }
-                else {
+                break;
+            case 'r':
+                rCount++;
+                if (optarg && *optarg != '-') {
                     rArg = optarg;
+                } else {
+                    optRes = (optRes == 0) ? 2 : optRes;
                 }
-            }
-            break;
-        case 'l':
-            lCount++;
-            if (optarg != NULL && *optarg != '\0') {
-                char *lineNums = strtok(optarg, ",");
-                if (lineNums) {
-                    first = strtol(lineNums, NULL, 0);
-                    last = strtol(strtok(NULL, ","), NULL, 0);
-                    if (!first || first < 1 || !last || last < 1 || first > last) {
-                        optRes = 3;
-                    }   
-                } 
-            } 
-            break;
-        case 'w':
-            wCount++;
-            break;
-        case '?':
-            if (optopt == 's') {
-                optRes = 1;
-            } else if (optopt == 'r') {
-                optRes = 2;
-            } else if (optopt == 'l') {
-                optRes = 3;
-            }
-            break;
-        default:
-            break;
+                break;
+            case 'l':
+                lCount++;
+                if (optarg) {
+                    char* tok1 = strtok(optarg, ",");
+                    char* tok2 = strtok(NULL, ",");
+                    char *end1, *end2;
+                    if (tok1 != NULL && *tok1 != '\0' && *tok1 != '-' &&
+                        tok2 != NULL && *tok2 != '\0' && *tok2 != '-') {
+                        first = (int)strtol(tok1, &end1, 0);
+                        last = (int)strtol(tok2, &end2, 0);
+                        if (*end1 != '\0' || *end2 != '\0' || first < 1 ||
+                            last < 1 || first > last) {
+                            optRes = (optRes == 0) ? 3 : optRes;
+                            break;
+                        }
+                    } else {
+                        optRes = (optRes == 0) ? 3 : optRes;
+                        break;
+                    }
+                } else {
+                    optRes = (optRes == 0) ? 3 : optRes;
+                }
+                break;
+            case 'w':
+                wCount++;
+                if (sArg) {
+                    int len = (int)strlen(sArg);
+                    if (*sArg == '*') {
+                        if (*(sArg + 1) == '*') {
+                            optRes = (optRes == 0) ? 4 : optRes;
+                            break;
+                        } else {
+                            if (*(sArg + len - 1) == '*') {
+                                optRes = (optRes == 0) ? 4 : optRes;
+                                break;
+                            } else {
+                                post++;
+                                wArg = optarg;
+                            }
+                        }
+                    } else if (*(sArg + len - 1) == '*') {
+                        if (*(sArg + len - 2) == '*') {
+                            optRes = (optRes == 0) ? 4 : optRes;
+                            break;
+                        } else {
+                            pre++;
+                            wArg = optarg;
+                        }
+                    } else if (*(sArg + 1) == '\0') {
+                        optRes = (optRes == 0) ? 4 : optRes;
+                        break;
+                    } else {
+                        optRes = (optRes == 0) ? 4 : optRes;
+                        break;
+                    }
+                } else {
+                    optRes = (optRes == 0) ? 4 : optRes;
+                    break;
+                }
+                break;
+            case '?':
+                if (optopt == 's') {
+                    optRes = (optRes == 0) ? 1 : optRes;
+                } else if (optopt == 'r') {
+                    optRes = (optRes == 0) ? 2 : optRes;
+                } else if (optopt == 'l') {
+                    optRes = (optRes == 0) ? 3 : optRes;
+                }
+                break;
+            default:
+                break;
         }
     }
-    int textOut;
     if (argc < 7) {
         return MISSING_ARGUMENT;
     } else if (sCount > 1 || rCount > 1 || lCount > 1 || wCount > 1) {
         return DUPLICATE_ARGUMENT;
-    } else if ((fin = fopen(argv[argc - 2], "r+")) == NULL) {
+    } else if ((fin = fopen(argv[argc - 2], "r")) == NULL) {
         return INPUT_FILE_MISSING;
-    } else if ((textOut = access(argv[argc - 1], W_OK)) == -1) {
+    } else if (out_writable(argv[argc - 1])) {
         return OUTPUT_FILE_UNWRITABLE;
     } else if (sCount == 0 || optRes == 1) {
         return S_ARGUMENT_MISSING;
@@ -123,9 +159,10 @@ int main(int argc, char *argv[])
         return R_ARGUMENT_MISSING;
     } else if (optRes == 3) {
         return L_ARGUMENT_INVALID;
-    } else {
-        // wildcard
+    } else if (optRes == 4) {
+        return WILDCARD_INVALID;
     }
+    fclose(fin);
 
     /*
      * TODO: Part 2, simple search and replace.
@@ -139,27 +176,44 @@ int main(int argc, char *argv[])
      * strstr for finding the search text.
      */
     char line[MAX_LINE];
-    char read[MAX_SEARCH_LEN];
-    FILE *tmpptr;
-    tmpptr = tmpfile();
     int currentLine = 1;
+    char* newLine = NULL;
+    fin = fopen(argv[argc - 2], "r");
+    if (!fin) {
+        return INPUT_FILE_MISSING;
+    }
     fout = fopen(argv[argc - 1], "w");
+    if (!fout) {
+        fclose(fin);
+        return OUTPUT_FILE_UNWRITABLE;
+    }
     while (fgets(line, sizeof(line), fin) != NULL) {
-        fputs(line, tmpptr);
         if (currentLine >= first && currentLine <= last) {
-            while (fscanf(tmpptr, "%s", read) == 1) {
-                if (strcmp(read, sArg) == 0) {
-                    fprintf(fout, "%s", rArg);
+            if (wCount > 1) {
+                if (pre) {
+                    newLine = wreplace(line, sArg, rArg);
+                } else if (post) {
                 } else {
-                    fprintf(fout, "%s", read);
+                    return WILDCARD_INVALID;
+                }
+            } else {
+                newLine = sreplace(line, sArg, rArg);
+                if (newLine) {
+                    fputs(newLine, fout);
+                    free(newLine);
+                } else {
+                    fputs(line, fout);
                 }
             }
+        } else {
+            fputs(line, fout);
         }
-        rewind(tmpptr);
         currentLine++;
+        newLine = NULL;
     }
-   
-    
+    fclose(fin);
+    fclose(fout);
+
     /*
      * TODO: Part 3, wildcard search and replace.
      *
@@ -178,4 +232,121 @@ int main(int argc, char *argv[])
      * after a punctuation mark, or at the very end of the file.
      */
     return 0;
+}
+
+// Helpers
+
+int out_writable(const char* fp) {
+    if (fp) {
+        if ((access(fp, W_OK) != 0)) {
+            if ((access(fp, F_OK) != 0)) {
+                char path[1024];
+                snprintf(path, sizeof(path), "%s", fp);
+                char* parent = dirname(path);
+                if (!parent) {
+                    return -1;
+                }
+                if (access(parent, W_OK) == 0) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                return -1;
+            }
+        } else {
+            return 0;
+        }
+    } else {
+        return -1;
+    }
+}
+
+char* sreplace(char* og, char* search, char* replace) {
+    int sLen = (int)strlen(search);
+    int rLen = (int)strlen(replace);
+    int count = 0;
+
+    if (sLen == 0) {
+        return og;
+    }
+
+    char* temp = og;
+    while ((temp = strstr(temp, search))) {
+        temp += sLen;
+        count++;
+    }
+    free(temp);
+    char* res = (char*)malloc(strlen(og) + ((rLen - sLen) * count) + 1);
+    if (!res) {
+        return NULL;
+    }
+    char* ptr = og;
+    char* dest = res;
+    char* start = og;
+    while ((ptr = strstr(start, search))) {
+        int copyLen = ptr - start;
+        memcpy(dest, start, copyLen);
+        dest += copyLen;
+        memcpy(dest, replace, rLen);
+        dest += rLen;
+        start = ptr + sLen;
+    }
+    strcpy(dest, start);
+    return res;
+}
+
+char* wreplace(char* og, char* search, char* replace) {
+    int sLen = (int)strlen(search);
+    int repLen = (int)strlen(replace);
+    char* res;
+    int lineLen = strlen(og);
+    memmove(&replace[repLen], &replace[repLen - 1],
+            replace[repLen] - replace[1]);
+    char* ptr1 = og;
+    char* ptr2 = og;
+    int i = 0;
+    while (i < lineLen) {
+        if ((!isspace(*ptr2) && !ispunct(*ptr2))) {
+            ptr2++;
+        } else {
+            char* word;
+            int dis = ptr2 - ptr1;
+            memcpy(word, ptr1, dis);
+            int wordLen = (int)strlen(word);
+            if (wordLen < sLen) {
+                memcpy(res, word, wordLen);
+                res += wordLen;
+                ptr2++;
+                memcpy(res, ptr2, 1);
+                res++;
+                ptr1 = ptr2;
+                free(word);
+            } else {
+                if (strncmp(word, search, sLen)) {
+                    memcpy(res, search, sLen);
+                    res += sLen;
+                    memmove(&word[wordLen], &replace[wordLen - sLen],
+                            replace[sLen] - replace[wordLen]);
+                    memcpy(res, word, wordLen - sLen);
+                    res += wordLen - sLen;
+                    ptr2++;
+                    memcpy(res, ptr2, 1);
+                    res++;
+                    ptr1 = ptr2;
+                    free(word);
+                } else {
+                    memcpy(res, word, wordLen);
+                    res += wordLen;
+                    ptr2++;
+                    memcpy(res, ptr2, 1);
+                    res++;
+                    ptr1 = ptr2;
+                    free(word);
+                }
+            }
+        }
+    }
+    res = '\0';
+    return res;
 }
